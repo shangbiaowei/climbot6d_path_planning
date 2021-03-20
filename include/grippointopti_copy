@@ -1,0 +1,473 @@
+/*****************************************************************************
+ *        过渡夹持点优化
+ *        GDUT, 2020
+ *        输入:
+ *        输出:
+ *****************************************************************************/
+
+#ifndef grippointopti_H__
+#define grippointopti_H__
+
+// #include <iostream>
+// #include "QTree.h"
+// #include "environment.h"
+// #include <nlopt.h>
+
+// using namespace std;
+
+// typedef struct 
+// {
+//     std::vector<int> truss_list;
+//     std::vector<std::vector<int> > grippoint_list;
+// } my_function_data;
+
+// //输入：dist：单根杆件上首末两点距离
+// //     angle_start:单根杆件上首点角度
+// //     angle_end：单根杆件上末点角度
+// //输出：gripnum：单根杆件上夹持点数目
+// int getGripNum(double dist,double angle_start,double angle_end)
+// {
+//     double gripnum = 0;
+
+//     if(dist < 0.001 && angle_start == angle_end)
+//     {
+//         gripnum = 0;
+//     }
+//     else if(dist >= 0 && dist <=100 && (fabs(angle_start - angle_end) < 45))
+//     {
+//         gripnum = 2;
+//     }
+//     else if(dist > 100 && dist <= 758.4)
+//     {
+//         gripnum = 1;
+//     }
+//     else if(dist > 758.4)
+//     {
+//         gripnum = 1 + ceil(dist / 758.4);
+//     }
+//     else
+//     {
+//         gripnum = 10000;  //设置极大值表示不可行
+//     }
+
+//     return gripnum;
+// }
+
+
+// double objective_fun(unsigned n,
+//                 const double *init_data,
+//                 double *grad, void* truss_grippoint_list_ptr)
+// {
+//     my_function_data * function_data_ptr = (my_function_data *) truss_grippoint_list_ptr;
+//     std::vector<std::vector<int>> grippoint_list = function_data_ptr->grippoint_list;
+//     std::vector<int> truss_list = function_data_ptr->truss_list;
+
+//     int truss_num = truss_list.size();    //杆件数量
+//     int var_num = 4 * truss_num - 4;    //变量数量
+
+//     std::vector<double> dist(truss_num,0); //杆件上距离：末-首
+//     std::vector<double> grip_num_single_member(truss_num,0);    //杆件上夹持点数目：由杆件上运动距离dist计算得来
+//     std::vector<double> len_scale(truss_num,0); //长度尺寸
+//     double grip_num_all = 0;
+
+//     for (int i = 0; i < truss_num; ++i)
+//     {
+//         len_scale[i] = (sqrt((truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) * (truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) +
+//                         (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) * (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) +
+//                         (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]) * (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]))) /
+//                         m_rows;
+//     }
+
+//     //第一根杆件
+//     dist[0] = fabs((init_data[0] - grippoint_list[0][0])) * len_scale[0]; //求解距离
+//     grip_num_single_member[0] = getGripNum(dist[0],grippoint_list[0][1],init_data[1]);     //获取步数
+//     grip_num_all += grip_num_single_member[0];  
+//     //中间n根杆
+//     for (int i = 1; i < truss_num - 1; ++i)
+//     {   
+//         dist[i] = fabs((init_data[4 * i] - init_data[4 * i - 2])) * len_scale[i];   //求解距离
+//         grip_num_single_member[i] = getGripNum(dist[i],init_data[4 * i - 1],init_data[4 * i + 1]);  //获取步数
+//         grip_num_all += grip_num_single_member[i];
+//     }
+//     //最后一根杆件
+//     dist[dist.size() - 1] = fabs(((grippoint_list[grippoint_list.size() - 1][0]) - init_data[var_num - 2])) * len_scale[len_scale.size() - 1]; //获取步数
+//     grip_num_single_member[dist.size() - 1] = getGripNum(dist[dist.size() - 1],grippoint_list[grippoint_list.size() - 1][1],init_data[var_num - 1]);   //获取步数
+//     grip_num_all += grip_num_single_member[dist.size() - 1];
+
+//     std::cout << grip_num_all + truss_num - 1 << " ";
+    
+//     return grip_num_all + truss_num - 1;
+// }
+
+// double constraint(unsigned n,
+//                 const double *init_data,
+//                 double *grad, void* truss_grippoint_list_ptr)
+// {
+//     // my_function_data *constraint_data_ptr = (my_function_data*)truss_grippoint_list_ptr;
+//     // // std::vector<std::vector<int>> grippoint_list = constraint_data_ptr->grippoint_list;
+//     // std::vector<int> truss_list = constraint_data_ptr->truss_list;
+
+//     // // std::cout << constraint_data_ptr->truss_list[1] << std::endl;
+
+//     // int flag = 0;
+
+//     // std::vector<double> tmp_truss1, tmp_truss2; //用于表示过渡时两杆件
+//     // int truss_num = truss_list.size();
+    
+//     // for (int i = 0; i < truss_num - 1;++i)
+//     // {
+//     //     tmp_truss1 = {truss[truss_list[i]-1][0], truss[truss_list[i]-1][1], truss[truss_list[i]-1][2],
+//     //                 truss[truss_list[i]-1][3], truss[truss_list[i]-1][4], truss[truss_list[i]-1][5]};
+//     //     tmp_truss2 = {truss[truss_list[i+1]-1][0], truss[truss_list[i+1]-1][1], truss[truss_list[i+1]-1][2],
+//     //                 truss[truss_list[i+1]-1][3], truss[truss_list[i+1]-1][4], truss[truss_list[i+1]-1][5]};
+//     //     if(transwithIK(tmp_truss1, tmp_truss2, init_data[4 * i], init_data[4 * i + 1], init_data[4 * i + 2], init_data[4 * i + 3], 0) == 1)
+//     //     {
+//     //         flag++;
+//     //     }
+//     // }
+
+//     // return flag - n/4;
+
+//     return transwithIK(truss1, truss5, init_data[0], init_data[1], init_data[2], init_data[3], 0) - 1;
+// }
+
+// double constraint_1(unsigned n,
+//                 const double *init_data,
+//                 double *grad, void* truss_grippoint_list_ptr)
+// {
+//     return transwithIK(truss5, truss7, init_data[4], init_data[5], init_data[6], init_data[7], 0) - 1;
+// }
+
+// //将变量限制为整型
+// double int_constraint(unsigned n,
+//                 const double *init_data,
+//                 double *grad, void* data)
+// {
+//     double flag = 0;
+
+//     for (size_t i = 0; i < n;++i)
+//     {
+//         double tmp = pow(init_data[i], -6.0);
+//         if((init_data[i] - int(init_data[i]) < tmp) && (init_data[i] - int(init_data[i]) > -tmp))
+//         {
+//             flag++;
+//         }
+//     }
+
+//     return flag - n;
+// }
+
+// // double inconstraint(unsigned n,
+// //                 const double *init_data,
+// //                 double *grad, void* truss_grippoint_list_ptr)
+// // {
+// //     return 0;
+// // }
+
+
+
+// int GripOpti(std::vector<int> &truss_list,
+//             std::vector<std::vector<int>> &grippoint_list)
+// {
+//     double fmin = 0;
+
+//     int truss_num = truss_list.size();  //路径中包含的杆件数目
+
+//     double tol=1;
+//     double upper[4 * truss_num - 4];
+//     double lower[4 * truss_num - 4];   //变量上下边界
+//     for (size_t i = 0;i< 4 * truss_num - 4;++i)
+//     {
+//         upper[i] = m_rows - 1;
+//         lower[i] = 0;
+//     }
+
+//     double init_data[4 * truss_num - 4]; //设置变量初始值
+//     for(size_t i = 0;i < 4 * truss_num - 4;++i)
+//     {
+//         init_data[i] = grippoint_list[(i+2) / 2][i % 2];
+//     }
+//     // std::cout << "初始值=" << std::endl;
+//     // for(size_t i = 0;i < 4 * truss_num - 4;++i)
+//     // {
+//     //     std::cout<<init_data[i]<<" ";
+//     // }
+
+
+
+//     //设置传递参数：truss_list和grippoint_list
+//     my_function_data truss_grippoint_list;
+//     truss_grippoint_list.grippoint_list = grippoint_list;
+//     truss_grippoint_list.truss_list = truss_list;
+//     my_function_data* truss_grippoint_list_ptr;
+//     truss_grippoint_list_ptr = &truss_grippoint_list;
+
+//     //设置选用算法：扩充拉格郎日法(第二个参数为变量个数)NLOPT_LN_COBYLA  NLOPT_GN_ISRES
+//     nlopt_opt opter = nlopt_create(NLOPT_GN_ISRES, 4 * truss_num - 4);
+
+//     //设置自变量下限
+//     nlopt_set_lower_bounds(opter, lower);
+//     nlopt_set_upper_bounds(opter, upper);
+
+//     // 目标函数
+//     nlopt_set_min_objective(opter, objective_fun, truss_grippoint_list_ptr);
+
+//     // // // 不等式约束
+//     // nlopt_add_inequality_constraint(opter, inconstraint, NULL, tol);
+
+//     // 等式约束
+//     nlopt_add_equality_constraint(opter, constraint, truss_grippoint_list_ptr, tol);
+//     nlopt_add_equality_constraint(opter, constraint_1, truss_grippoint_list_ptr, tol);
+//     // nlopt_add_equality_constraint(opter, int_constraint, NULL, tol);    //整型约束
+
+//     double int_step[4 * truss_num - 4];
+//     for (int i = 0; i < 4 * truss_num - 4;++i)
+//     {
+//         int_step[i] = 1.0;
+//     }
+//     //设置步长
+//     nlopt_set_initial_step(opter, int_step);
+
+//     // 停止时需要的条件；
+//     // nlopt_set_xtol_rel(opter,tol);
+//     nlopt_set_maxtime(opter,2);
+
+//     // 开始优化；
+//     //输出结果
+//     try{
+//         nlopt_result result=nlopt_optimize(opter, init_data, &fmin);
+//         if(result)
+//         {
+//             std::cout << "found minimum at f(";
+//             for (size_t i = 0; i < 4 * truss_num - 4;++i)
+//             {
+//                 std::cout << init_data[i] << " ";
+//             }
+//             std::cout << ")=";
+//             std::cout << fmin << std::endl;
+//         }
+
+
+//         std::cout << result << std::endl;
+//     }
+//     catch(std::exception &e) {
+//         std::cout << "nlopt failed: " << e.what() << std::endl;
+//     }
+
+//     //free
+//     nlopt_destroy(opter);
+//     return 0;
+// }
+
+
+#include <iostream>
+#include "QTree.h"
+#include "../dlib-19.21/dlib/optimization.h"
+#include "../dlib-19.21/dlib/global_optimization.h"
+
+using namespace std;
+using namespace dlib;
+
+typedef matrix<double, 0, 1> column_vector;
+
+int iteration_count = 0;  //计数位
+std::vector<double> tmp_truss1, tmp_truss2; //用于表示过渡时两杆件
+
+
+//输入：dist：单根杆件上首末两点距离
+//     angle_start:单根杆件上首点角度
+//     angle_end：单根杆件上末点角度
+//输出：gripnum：单根杆件上夹持点数目
+int getGripNum(double dist,double angle_start,double angle_end)
+{
+    double gripnum = 0;
+    // std::cout << dist<< std::endl;
+
+    if(dist < 0.001 && angle_start == angle_end)
+    {
+        gripnum = 0;
+    }
+    else if(dist < 0.001 && angle_start != angle_end)
+    {
+        gripnum = 2;
+    }
+    else if(dist >= 0 && dist <=100) // && (fabs(angle_start - angle_end) < 45)
+    {
+        gripnum = 2;
+    }
+    else if(dist > 100 && dist <= 758.4)
+    {
+        if( ((fabs(angle_start - angle_end) <= 35 - dist/25) && (fabs(angle_start - angle_end) >= 17 - dist/24)) ||
+        ( (fabs(angle_start + 128 - angle_end) >= 17 - dist/24) && (fabs(angle_start + 128 - angle_end) <= 35 - dist/25) && (angle_start < 35) ) ||
+        ( (fabs(angle_start - 128 + angle_end) >= 17 - dist/24) && (fabs(angle_start - 128 + angle_end) <= 35 - dist/25) && (angle_start > 98)))
+        {
+            gripnum = 1;
+        }
+        else
+        {
+            gripnum = 2;
+        }
+    }
+    else if(dist > 758.4)
+    {
+        gripnum = 1 + ceil(dist / 758.4);
+    }
+    // else
+    // {
+    //     // std::cout << dist << " ";
+    //     gripnum = 10000;  //设置极大值表示不可行
+    // }
+    return gripnum;
+}
+
+
+//输入：杆件列表truss_list
+//     夹持点列表gripppoint_list
+int GripOpti(std::vector<int> &truss_list,std::vector<std::vector<int>> &grippoint_list) try
+{
+    //自变量个数：位置+角度，n根杆一共有2n个区域（不包含起点终点），那么有4n个参数
+    int truss_num = truss_list.size();  //路径中包含的杆件数目
+    std::vector<double> dist(truss_num,0); //杆件上距离：末-首
+    std::vector<double> grip_num_single_member(truss_num,0);    //杆件上夹持点数目：由杆件上运动距离dist计算得来
+    std::vector<double> len_scale(truss_num,0); //长度尺寸
+
+    for (int i = 0; i < truss_num; ++i)
+    {
+        len_scale[i] = (sqrt((truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) * (truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) +
+                        (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) * (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) +
+                        (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]) * (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]))) /
+                        m_rows;
+    }
+
+    auto holder_table = [&](const column_vector& init_data) 
+    {
+        double grip_num_all = 0; //总夹持点数目
+
+        int trans_count = 0;
+        for (int i = 0; i < truss_num - 1;++i)
+        {
+            tmp_truss1 = {truss[truss_list[i]-1][0], truss[truss_list[i]-1][1], truss[truss_list[i]-1][2],
+                        truss[truss_list[i]-1][3], truss[truss_list[i]-1][4], truss[truss_list[i]-1][5]};
+            tmp_truss2 = {truss[truss_list[i+1]-1][0], truss[truss_list[i+1]-1][1], truss[truss_list[i+1]-1][2],
+                        truss[truss_list[i+1]-1][3], truss[truss_list[i+1]-1][4], truss[truss_list[i+1]-1][5]};
+            if(transwithIK(tmp_truss1,tmp_truss2,init_data(4 * i),init_data(4 * i + 1),init_data(4 * i + 2),init_data(4 * i + 3),0) == 1)
+            {
+                trans_count++;
+            }
+        }
+
+        if(trans_count == truss_num - 1)
+        {
+            //第一根杆件
+            dist[0] = fabs((init_data(0) - grippoint_list[0][0])) * len_scale[0]; //求解距离
+            grip_num_single_member[0] = getGripNum(dist[0],grippoint_list[0][1],init_data(1));     //获取步数
+            grip_num_all += grip_num_single_member[0];  
+            //中间n根杆
+            for (int i = 1; i < truss_num - 1; ++i)
+            {   
+                dist[i] = fabs((init_data(4 * i) - init_data(4 * i - 2))) * len_scale[i];   //求解距离
+                grip_num_single_member[i] = getGripNum(dist[i],init_data(4 * i - 1),init_data(4 * i + 1));  //获取步数
+                grip_num_all += grip_num_single_member[i];
+            }
+            //最后一根杆件
+            dist[dist.size() - 1] = fabs(((grippoint_list[grippoint_list.size() - 1][0]) - init_data(init_data.size() - 2))) * len_scale[len_scale.size() - 1]; //获取步数
+            grip_num_single_member[dist.size() - 1] = getGripNum(dist[dist.size() - 1],grippoint_list[grippoint_list.size() - 1][1],init_data(init_data.size() - 1));   //获取步数
+            grip_num_all += grip_num_single_member[dist.size() - 1];
+            
+            iteration_count++;  //计算迭代次数
+            return grip_num_all + truss_num - 1;
+        }
+        else
+        {
+            grip_num_all = 10000;
+            return grip_num_all;
+        }
+    };
+
+    //定义上下边界
+    column_vector lower(4 * truss_num - 4),upper(4 * truss_num - 4);
+    lower = 0;
+    upper = m_rows - 1;
+    for (int i = 0;i <  4 * truss_num - 4;++i)
+    {
+        if(i == 0)
+        {
+            lower(0) = grippoint_list[1][0] - 30;
+            upper(0) = grippoint_list[1][0] + 30;
+        }
+        else if(i == 1)
+        {
+            lower(i) = grippoint_list[1][1] - 30;
+            upper(i) = grippoint_list[1][1] + 30;   //限制过渡时转角基座范围
+        }
+        else if((i+2) % 2 == 0)
+        {
+            lower(i) = grippoint_list[i/2 + 1][0] - 30;
+            upper(i) = grippoint_list[i/2 + 1][0] + 30;     //过渡时目标杆件距离范围
+        }
+        else if(i>1 &&  i % 2 == 1)
+        {
+            lower(i) = grippoint_list[(i + 1) / 2][1] - 30;
+            upper(i) = grippoint_list[(i + 1) / 2][1] + 30; //限制转角范围
+        }
+    }
+    for (int i = 0;i <  4 * truss_num - 4;++i)
+    {
+        if(lower(i) < 0)
+        {
+            lower(i) = 0;
+        }
+        if(upper(i) > 127)
+        {
+            upper(i) = 127;
+        }
+    }
+
+    std::vector<bool> is_int(4 * truss_num - 4, true); //参数为整型
+    column_vector starting_point(4 * truss_num - 4);  //起始点设置
+    for(size_t i = 0;i < 4 * truss_num - 4;++i)
+    {
+        starting_point(i) = grippoint_list[(i+2) / 2][i % 2];
+    }
+
+    dlib::thread_pool tmp_pool(3);   //设置线程数量
+
+    auto result = find_min_global(tmp_pool, //多线程
+                                holder_table,
+                                lower,
+                                upper,
+                                is_int,     //is_integer_variable
+                                max_function_calls(10000),
+                                std::chrono::milliseconds(5000),
+                                starting_point
+                                );
+
+
+
+    //优化结果输出
+    std::cout <<"Iterations = " << iteration_count << std::endl;//迭代次数
+    std::cout << "opti_result:" << std::endl;
+    std::cout << grippoint_list[0][0] << "   " << grippoint_list[0][1] << std::endl;
+    for (int i = 0; i < result.x.size();++i)
+    {
+        std::cout << result.x(i)<<"   ";
+        if(i%2 != 0)
+        {
+            std::cout << std::endl;
+        }
+    }
+    std::cout << grippoint_list[grippoint_list.size() - 1][0] << "   " << grippoint_list[grippoint_list.size() - 1][1] << std::endl;
+    std::cout << std::endl;
+    cout <<"夹持点数目为" <<result.y << endl;
+
+    return 0;
+}
+
+catch (std::exception& e)
+{
+    cout << e.what() << endl;
+    return -1;
+}
+
+
+#endif  //grippointopti.h

@@ -1,0 +1,17 @@
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/edit_cache.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/package_source.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/rebuild_cache.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/package.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/install/strip.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/install/local.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/list_install_components.dir
+/home/wei/climbot6d/dlib-19.21/build/CMakeFiles/install.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/edit_cache.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/package_source.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/rebuild_cache.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/package.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/install/local.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/install/strip.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/list_install_components.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/dlib.dir
+/home/wei/climbot6d/dlib-19.21/build/dlib/CMakeFiles/install.dir

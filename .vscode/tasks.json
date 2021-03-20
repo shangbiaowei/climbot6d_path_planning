@@ -1,0 +1,45 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile",
+            "type": "shell",
+            "command": "",
+            "args": [
+                "g++","-g","-mcmodel=large",
+                "${workspaceFolder}/src/main.cpp",
+                "${workspaceFolder}/src/m_Matrix.cpp",
+                "${workspaceFolder}/src/Kine.cpp",
+                "${workspaceFolder}/src/QTree.cpp",
+                "${workspaceFolder}/src/pole.cpp",
+                "${workspaceFolder}/src/Coordinate.cpp",
+                "${workspaceFolder}/src/globalpath.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}",
+                "-g",
+                "-Wall",
+                "-static-libgcc", // 静态链接
+                "-std=c++17" // C语言最新标准为c11，或根据自己的需要进行修改
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true  
+            },
+           "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": ["relative", "${workspaceRoot}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        
+    ]
+}
