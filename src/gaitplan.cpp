@@ -16,7 +16,7 @@ void gaitPlan::curGripperPos(std::vector<double> &joint_angle,
 
     float position[3] = {out_pos[0], out_pos[1], out_pos[2]};
     //转换到世界坐标系下
-    transPointToWorld(position, cur_truss, length, angle, out_point);
+    transPointToWorld(position,cur_truss, length, angle, out_point,0);
 }
 
 

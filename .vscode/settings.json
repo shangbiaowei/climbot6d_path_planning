@@ -4,7 +4,7 @@
     "editor.snippetSuggestions": "top", // snippets代码优先显示补全
     "code-runner.executorMap": {
         "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-        "cpp": "g++ -std=c++11 climbot6d/dlib-19.21/dlib/all/source.cpp -lpthread -lX11 climbot6d/src/Kine.cpp climbot6d/src/m_Matrix.cpp climbot6d/src/Coordinate.cpp climbot6d/src/QTree.cpp climbot6d/src/pole.cpp climbot6d/src/Astar.cpp climbot6d/src/main.cpp -o $fileNameWithoutExt.out && ./$fileNameWithoutExt.out",
+        "cpp": "g++ -std=c++11 climbot6d/dlib-19.21/dlib/all/source.cpp -lpthread -lX11 climbot6d/src/Kine.cpp climbot6d/src/m_Matrix.cpp climbot6d/src/Coordinate.cpp climbot6d/src/QTree.cpp climbot6d/src/pole.cpp climbot6d/src/Astar.cpp climbot6d/src/pathallocate.cpp climbot6d/src/main.cpp -o $fileNameWithoutExt.out && ./$fileNameWithoutExt.out",
     },
     "code-runner.runInTerminal": true, // 设置成false会在“输出”中输出，无法输入
     "code-runner.saveFileBeforeRun": true, // run code前保存
@@ -76,7 +76,11 @@
         "valarray": "cpp",
         "*.ipp": "cpp",
         "scoped_allocator": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "slist": "cpp",
+        "hash_set": "cpp",
+        "core": "cpp",
+        "queue": "cpp"
     }
 
 

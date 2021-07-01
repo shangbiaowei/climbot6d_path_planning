@@ -1,67 +1,72 @@
 [
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/gaitplan.cpp.o -c /home/wei/climbot6d/src/gaitplan.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/gaitplan.cpp.o -c /home/wei/climbot6d/src/gaitplan.cpp",
   "file": "/home/wei/climbot6d/src/gaitplan.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/main.cpp.o -c /home/wei/climbot6d/src/main.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/main.cpp.o -c /home/wei/climbot6d/src/main.cpp",
   "file": "/home/wei/climbot6d/src/main.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/QuadTree.cpp.o -c /home/wei/climbot6d/src/QuadTree.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/QuadTree.cpp.o -c /home/wei/climbot6d/src/QuadTree.cpp",
   "file": "/home/wei/climbot6d/src/QuadTree.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/Kine.cpp.o -c /home/wei/climbot6d/src/Kine.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/Kine.cpp.o -c /home/wei/climbot6d/src/Kine.cpp",
   "file": "/home/wei/climbot6d/src/Kine.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.o -c /home/wei/climbot6d/src/gpoptidata.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.o -c /home/wei/climbot6d/src/gpoptidata.cpp",
   "file": "/home/wei/climbot6d/src/gpoptidata.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o -c /home/wei/climbot6d/src/generateSimData.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o -c /home/wei/climbot6d/src/generateSimData.cpp",
   "file": "/home/wei/climbot6d/src/generateSimData.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/Coordinate.cpp.o -c /home/wei/climbot6d/src/Coordinate.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/Coordinate.cpp.o -c /home/wei/climbot6d/src/Coordinate.cpp",
   "file": "/home/wei/climbot6d/src/Coordinate.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o -c /home/wei/climbot6d/src/m_Matrix.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o -c /home/wei/climbot6d/src/m_Matrix.cpp",
   "file": "/home/wei/climbot6d/src/m_Matrix.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o -c /home/wei/climbot6d/src/pathallocate.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/motionplan.cpp.o -c /home/wei/climbot6d/src/motionplan.cpp",
+  "file": "/home/wei/climbot6d/src/motionplan.cpp"
+},
+{
+  "directory": "/home/wei/climbot6d/build",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o -c /home/wei/climbot6d/src/pathallocate.cpp",
   "file": "/home/wei/climbot6d/src/pathallocate.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o -c /home/wei/climbot6d/src/cubicSpline.cpp",
-  "file": "/home/wei/climbot6d/src/cubicSpline.cpp"
-},
-{
-  "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/globalpath.cpp.o -c /home/wei/climbot6d/src/globalpath.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/globalpath.cpp.o -c /home/wei/climbot6d/src/globalpath.cpp",
   "file": "/home/wei/climbot6d/src/globalpath.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/pole.cpp.o -c /home/wei/climbot6d/src/pole.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o -c /home/wei/climbot6d/src/robotTorque.cpp",
+  "file": "/home/wei/climbot6d/src/robotTorque.cpp"
+},
+{
+  "directory": "/home/wei/climbot6d/build",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/pole.cpp.o -c /home/wei/climbot6d/src/pole.cpp",
   "file": "/home/wei/climbot6d/src/pole.cpp"
 },
 {
   "directory": "/home/wei/climbot6d/build",
-  "command": "/usr/bin/g++-5   -DNLOPT_DLL -isystem /usr/local/include -I/home/wei/climbot6d/include  -g   -std=c++17 -o CMakeFiles/climbot6d.dir/src/QTree.cpp.o -c /home/wei/climbot6d/src/QTree.cpp",
+  "command": "/usr/bin/g++-5   -DNLOPT_DLL -I/home/wei/climbot6d/include -isystem /usr/local/include -I/opt/ros/kinetic/include  -g   -std=c++14 -o CMakeFiles/climbot6d.dir/src/QTree.cpp.o -c /home/wei/climbot6d/src/QTree.cpp",
   "file": "/home/wei/climbot6d/src/QTree.cpp"
 }
 ]

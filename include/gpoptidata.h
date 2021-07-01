@@ -24,7 +24,8 @@ using namespace std;
 int globalPathPlanStart(std::vector<int> &start_point,
                         std::vector<int> &end_point,
                         int start_pole, int end_pole,
-                        std::vector<std::vector<int>> &res);
+                        std::vector<std::vector<int>> &res,
+                        const int DOF_flag);
 
 /*
  * 功能：通过4个三维坐标点求包含这四个点的球心以及半径
@@ -51,7 +52,10 @@ int findminiball(const vector<double> &p1, const vector<double> &p2,
  * 输出:全局路径序列 truss_list
  *     夹持点信息 grippoint_list
 */
-void getTransTrussList(std::vector<int> start_point, std::vector<int> end_point, std::vector<int> &truss_list, std::vector<std::vector<int>> &grippoint_list);
+void getTransTrussList(std::vector<int> start_point, std::vector<int> end_point, 
+                        std::vector<int> &truss_list, 
+                        std::vector<std::vector<int>> &grippoint_list,
+                        const int DOF_flag);
 
 /*
  * 功能：通过当前机器人位姿生成包络球体进行快速碰撞检测
@@ -77,9 +81,10 @@ int getPontentialObstacle(std::vector<std::vector<double>> &link,
  * - length2\angle2：机器人目标夹持点的离散地图位置
  * 返回值：连杆坐标数组
  */
-std::vector<std::vector<double>> getCurJointPoint(std::vector<double> &cur_truss, std::vector<double> &tar_truss,
-                                                  const int length1, const int angle1,
-                                                  const int length2, const int angle2);
+void getCurJointPoint(std::vector<double> &cur_truss, std::vector<double> &tar_truss,
+                    const int length1, const int angle1,
+                    const int length2, const int angle2,
+                    std::vector<std::vector<double>> &link);
 
 
 /*

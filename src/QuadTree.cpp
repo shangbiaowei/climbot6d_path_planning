@@ -47,7 +47,7 @@ QuadTreeNode * QuadTree::construct(std::vector<std::vector<int> > grid)
 {
     int M = (int)grid.size();
     if (M == 0) return NULL;
-    t_root = split(grid, 0, 0, m_rows, m_rows,0);
+    t_root = split(grid, 0, 0, pole_rows, pole_rows,0);
     return t_root;
 }
 

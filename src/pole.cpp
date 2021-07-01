@@ -14,27 +14,27 @@
 Discretepole::Discretepole()
 {
     //展开数组初始化
-    cur_pole->p_map = new double**[m_rows] ;
-    target_pole->p_map = new double**[m_rows] ;
-    for( int i = 0 ; i < m_rows ; ++i )
+    cur_pole->p_map = new double**[pole_rows] ;
+    target_pole->p_map = new double**[pole_rows] ;
+    for( int i = 0 ; i < pole_rows ; ++i )
     {
-        cur_pole->p_map[i] = new double*[m_cols] ;
-        target_pole->p_map[i] = new double*[m_cols] ;
+        cur_pole->p_map[i] = new double*[pole_cols] ;
+        target_pole->p_map[i] = new double*[pole_cols] ;
     }
-    for( int i = 0 ; i < m_rows ; ++i )
-    for( int j = 0 ; j < m_cols ; ++j )
+    for( int i = 0 ; i < pole_rows ; ++i )
+    for( int j = 0 ; j < pole_cols ; ++j )
     {
         cur_pole->p_map[i][j] = new double[6] ;
         target_pole->p_map[i][j] = new double[6] ;
     }
 
     //过渡标志数组初始化
-    cur_pole->transflag.resize(m_rows);
-    target_pole->transflag.resize(m_rows);
-    for (int i = 0; i < m_rows;++i)
+    cur_pole->transflag.resize(pole_rows);
+    target_pole->transflag.resize(pole_rows);
+    for (int i = 0; i < pole_rows;++i)
     {
-        cur_pole->transflag[i].resize(m_cols);
-        target_pole->transflag[i].resize(m_cols);
+        cur_pole->transflag[i].resize(pole_cols);
+        target_pole->transflag[i].resize(pole_cols);
     }
 }
 
@@ -42,15 +42,15 @@ Discretepole::Discretepole()
 Discretepole::~Discretepole()
 {
     //释放三维数组
-    for(int  i = 0 ; i < m_rows ; ++i )
+    for(int  i = 0 ; i < pole_rows ; ++i )
     {
-        for(int  j = 0 ; j < m_cols ; ++j )
+        for(int  j = 0 ; j < pole_cols ; ++j )
         {
             delete[] target_pole->p_map[i][j];
             delete[] cur_pole->p_map[i][j];
         }
     }
-    for(int  i = 0 ; i < m_rows ; ++i )
+    for(int  i = 0 ; i < pole_rows ; ++i )
     {
         delete[] target_pole->p_map[i];
         delete[] cur_pole->p_map[i];
@@ -69,12 +69,12 @@ void Discretepole::setStartPos(Poles *cur_pole,
 {
     for(int i = 0;i<3;++i)
     {
-        start_point[i] = cur_pole->p[i] + (cur_pole->p[i+3] - cur_pole->p[i]) / m_rows * (length);
+        start_point[i] = cur_pole->p[i] + (cur_pole->p[i+3] - cur_pole->p[i]) / pole_rows * (length);
         // std::cout << "start_p[" << i << "]" << start_point[i] << " ";
     }   //起点位置设置
 
     //double alpha = 0.0;   //弧度
-    res_angle = -3.1416 + 6.2832 / m_cols * (alpha);
+    res_angle = -3.1416 + 6.2832 / pole_cols * (alpha);
     // std::cout << "res_angle=" << res_angle << std::endl;
 }
 
@@ -82,9 +82,9 @@ void Discretepole::setStartPos(Poles *cur_pole,
 void Discretepole::AssignmentData(float temp[],Poles *cur_pole,Poles *target_pole)
 {
     //赋值
-    for (int i = 0; i < m_rows; ++i)
+    for (int i = 0; i < pole_rows; ++i)
     {
-        for (int j = 0; j < m_cols; ++j)
+        for (int j = 0; j < pole_cols; ++j)
         {
             cur_pole->transflag[i][j] = 0;
             target_pole->transflag[i][j] = 0; //过渡标志位默认置0
@@ -158,103 +158,201 @@ void Discretepole::AssignmentData(float temp[],Poles *cur_pole,Poles *target_pol
 //过渡测试
 void Discretepole::transitionalTest(Poles *cur_pole, Poles *target_pole,const int GripId)
 {
-    //初始化机器人
-    double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
-    Kine_CR_SixDoF_G1 climbot6d_G1;
-    Kine_CR_SixDoF_G2 climbot6d_G2;
-    climbot6d_G1.Set_Length(len);
-    climbot6d_G2.Set_Length(len);
- 
     std::ofstream outfile;
     outfile.open("../src/myfile.txt");  //输出栅格地图
 
-    //距离初步筛选，过滤不可到达点（不考虑姿态）
-    //工作空间球形方程为x * x + y * y + (z - c) * (z - c) = r * r;
-    double curgdj[6] = {0,90,90,0,0,0},out_gdjpos[6];
- 
-    /*
-    //遍历杆件1
-    for (int i = 0;i < m_rows;++i)
-    { 
-        //std::cout<<"pole1["<<i<<"]="<<"\t";
-        for (int j = 0;j < m_cols;++j)
-            {
-                double gdcpos[6] = {cur_pole->p_map[i][j][0],cur_pole->p_map[i][j][1],cur_pole->p_map[i][j][2],cur_pole->p_map[i][j][3],cur_pole->p_map[i][j][4],cur_pole->p_map[i][j][5]};
-                if(cur_pole->p_map[i][j][0] * cur_pole->p_map[i][j][0] + cur_pole->p_map[i][j][1] * cur_pole->p_map[i][j][1] + 
-                (cur_pole->p_map[i][j][2] - len[0] - len[1]) * (cur_pole->p_map[i][j][2] - len[0] - len[1]) - 
-                (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
-                {
-                    break; //标志位设0,不可过渡
-                }
-                else if(climbot6d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
-                {
-                     cur_pole->transflag[i][j] = 1; //标志位设1,可过渡
-                }  
-                else
-                {
-                    cur_pole->transflag[i][j] = 0; //标志位设0,不可过渡
-                }  //判断逆解是否存在
-                //std::cout<<cur_pole->p_map[i][j][6]<<" ";
-                //outfile << cur_pole->p_map[i][j][6] << " ";
-            } 
-       //std::cout<<std::endl;
-       //outfile << std::endl;
-    }
-    //outfile.close();
-    */
-
-    //遍历杆件2
-    //g0基座
-    if(GripId == 0)
+    if(DOF_flag == 6)
     {
-        // std::cout << "g0";
-        for (int i = 0;i < m_rows;++i)
-        {
-            for (int j = 0;j < m_cols;++j)
-            {
-                double gdcpos[6] = {target_pole->p_map[i][j][0],target_pole->p_map[i][j][1],target_pole->p_map[i][j][2],target_pole->p_map[i][j][3],target_pole->p_map[i][j][4],target_pole->p_map[i][j][5]};
-                if(target_pole->p_map[i][j][0] * target_pole->p_map[i][j][0] + target_pole->p_map[i][j][1] * target_pole->p_map[i][j][1] + 
-                (target_pole->p_map[i][j][2] - len[0] - len[1]) * (target_pole->p_map[i][j][2] - len[0] - len[1]) - 
-                (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+        //初始化机器人
+        double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
+        Kine_CR_SixDoF_G1 climbot6d_G1;
+        Kine_CR_SixDoF_G2 climbot6d_G2;
+        climbot6d_G1.Set_Length(len);
+        climbot6d_G2.Set_Length(len);
+
+        //距离初步筛选，过滤不可到达点（不考虑姿态）
+        //工作空间球形方程为x * x + y * y + (z - c) * (z - c) = r * r;
+        double curgdj[6] = {0,90,90,0,0,0},out_gdjpos[6];
+    
+        /*
+        //遍历杆件1
+        for (int i = 0;i < pole_rows;++i)
+        { 
+            //std::cout<<"pole1["<<i<<"]="<<"\t";
+            for (int j = 0;j < pole_cols;++j)
                 {
-                    target_pole->transflag[i][j] = 0;
-                    // break; //标志位设0,不可过渡
-                }
-                else if(climbot6d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
-                {
-                    //target_pole->p_map[i][j][6] = 1; //标志位设1,可过渡
-                    target_pole->transflag[i][j] = 1;
-                    // if(i == 54 && j ==94)
-                    // {
-                    //     std::cout << "位姿 =";
-                    //     for (size_t r = 0; r < 6;++r)
-                    //     {
-                    //         // std::cout << out_gdjpos[r]<< " ";
-                    //         std::cout << target_pole->p_map[i][j][r] << " ";
-                    //     }
-                    //     std::cout << std::endl;
-                    //     //仿真用输出值
-                    //     std::cout << "关节角 =";
-                    //     std::cout << out_gdjpos[0] * PI_RAD << " ";
-                    //     std::cout << -(out_gdjpos[1] -90)* PI_RAD << " ";
-                    //     std::cout << (out_gdjpos[2] - 90)* PI_RAD << " ";
-                    //     std::cout << -out_gdjpos[3] * PI_RAD<< " ";
-                    //     std::cout << out_gdjpos[4] * PI_RAD<< " ";
-                    //     std::cout << -out_gdjpos[5] * PI_RAD<< " ";                
-                    //     std::cout << std::endl;
-                    // }
-                }  
-                else
-                {
-                    //target_pole->p_map[i][j][6] = 0; //标志位设0,不可过渡
-                    target_pole->transflag[i][j] = 0;
-                }  //判断逆解是否存在
-                outfile << target_pole->transflag[i][j]<< " ";
-            } 
-        outfile << std::endl;
+                    double gdcpos[6] = {cur_pole->p_map[i][j][0],cur_pole->p_map[i][j][1],cur_pole->p_map[i][j][2],cur_pole->p_map[i][j][3],cur_pole->p_map[i][j][4],cur_pole->p_map[i][j][5]};
+                    if(cur_pole->p_map[i][j][0] * cur_pole->p_map[i][j][0] + cur_pole->p_map[i][j][1] * cur_pole->p_map[i][j][1] + 
+                    (cur_pole->p_map[i][j][2] - len[0] - len[1]) * (cur_pole->p_map[i][j][2] - len[0] - len[1]) - 
+                    (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+                    {
+                        break; //标志位设0,不可过渡
+                    }
+                    else if(climbot6d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
+                    {
+                        cur_pole->transflag[i][j] = 1; //标志位设1,可过渡
+                    }  
+                    else
+                    {
+                        cur_pole->transflag[i][j] = 0; //标志位设0,不可过渡
+                    }  //判断逆解是否存在
+                    //std::cout<<cur_pole->p_map[i][j][6]<<" ";
+                    //outfile << cur_pole->p_map[i][j][6] << " ";
+                } 
+        //std::cout<<std::endl;
+        //outfile << std::endl;
         }
-        outfile.close();
+        //outfile.close();
+        */
+
+        //遍历杆件2
+        //g0基座
+        if(GripId == 0)
+        {
+            // std::cout << "g0";
+            for (int i = 0;i < pole_rows;++i)
+            {
+                for (int j = 0;j < pole_cols;++j)
+                {
+                    double gdcpos[6] = {target_pole->p_map[i][j][0],target_pole->p_map[i][j][1],target_pole->p_map[i][j][2],target_pole->p_map[i][j][3],target_pole->p_map[i][j][4],target_pole->p_map[i][j][5]};
+                    if(target_pole->p_map[i][j][0] * target_pole->p_map[i][j][0] + target_pole->p_map[i][j][1] * target_pole->p_map[i][j][1] + 
+                    (target_pole->p_map[i][j][2] - len[0] - len[1]) * (target_pole->p_map[i][j][2] - len[0] - len[1]) - 
+                    (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+                    {
+                        target_pole->transflag[i][j] = 0;
+                        // break; //标志位设0,不可过渡
+                    }
+                    else if(climbot6d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
+                    {
+                        //target_pole->p_map[i][j][6] = 1; //标志位设1,可过渡
+                        target_pole->transflag[i][j] = 1;
+                    }  
+                    else
+                    {
+                        //target_pole->p_map[i][j][6] = 0; //标志位设0,不可过渡
+                        target_pole->transflag[i][j] = 0;
+                    }  //判断逆解是否存在
+                    outfile << target_pole->transflag[i][j]<< " ";
+                } 
+            outfile << std::endl;
+            }
+            outfile.close();
+        }
+        if(GripId == 7)
+        {
+            // std::cout << "g7";
+            for (int i = 0;i < pole_rows;++i)
+            {
+                for (int j = 0;j < pole_cols;++j)
+                {
+                    double gdcpos[6] = {target_pole->p_map[i][j][0],target_pole->p_map[i][j][1],target_pole->p_map[i][j][2],target_pole->p_map[i][j][3],target_pole->p_map[i][j][4],target_pole->p_map[i][j][5]};
+                    if(target_pole->p_map[i][j][0] * target_pole->p_map[i][j][0] + target_pole->p_map[i][j][1] * target_pole->p_map[i][j][1] + 
+                    (target_pole->p_map[i][j][2] - len[0] - len[1]) * (target_pole->p_map[i][j][2] - len[0] - len[1]) - 
+                    (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+                    {
+                        target_pole->transflag[i][j] = 0;
+                        // break; //标志位设0,不可过渡
+                    }
+                    else if(climbot6d_G2.IKine(gdcpos,curgdj,out_gdjpos) == 0)
+                    {
+                        //target_pole->p_map[i][j][6] = 1; //标志位设1,可过渡
+                        target_pole->transflag[i][j] = 1;
+                    }  
+                    else
+                    {
+                        //target_pole->p_map[i][j][6] = 0; //标志位设0,不可过渡
+                        target_pole->transflag[i][j] = 0;
+                    }  //判断逆解是否存在
+                    outfile << target_pole->transflag[i][j]<< " ";
+                } 
+            outfile << std::endl;
+            }
+            outfile.close();
+        }
     }
+    else if(DOF_flag == 5)
+    {
+        //初始化机器人
+        double len[6] = {204, 136.7, 293.2, 293.2, 136.7, 204};
+        Kine_CR_FiveDoF_G1 climbot5d_G1;
+        Kine_CR_FiveDoF_G2 climbot5d_G2;
+        climbot5d_G1.Set_Length(len);
+        climbot5d_G2.Set_Length(len);
+
+        //距离初步筛选，过滤不可到达点（不考虑姿态）
+        //工作空间球形方程为x * x + y * y + (z - c) * (z - c) = r * r;
+        double curgdj[5] = {0,90,0,90,0},out_gdjpos[6];
+    
+        //遍历杆件2
+        //g0基座
+        if(GripId == 0)
+        {
+            // std::cout << "g0";
+            for (int i = 0;i < pole_rows;++i)
+            {
+                for (int j = 0;j < pole_cols;++j)
+                {
+                    double gdcpos[6] = {target_pole->p_map[i][j][0],target_pole->p_map[i][j][1],target_pole->p_map[i][j][2],target_pole->p_map[i][j][3],target_pole->p_map[i][j][4],target_pole->p_map[i][j][5]};
+                    if(target_pole->p_map[i][j][0] * target_pole->p_map[i][j][0] + target_pole->p_map[i][j][1] * target_pole->p_map[i][j][1] + 
+                    (target_pole->p_map[i][j][2] - len[0] - len[1]) * (target_pole->p_map[i][j][2] - len[0] - len[1]) - 
+                    (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+                    {
+                        target_pole->transflag[i][j] = 0;
+                        // break; //标志位设0,不可过渡
+                    }
+                    else if(climbot5d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
+                    {
+                        //target_pole->p_map[i][j][6] = 1; //标志位设1,可过渡
+                        target_pole->transflag[i][j] = 1;
+                    }  
+                    else
+                    {
+                        //target_pole->p_map[i][j][6] = 0; //标志位设0,不可过渡
+                        target_pole->transflag[i][j] = 0;
+                    }  //判断逆解是否存在
+                    outfile << target_pole->transflag[i][j]<< " ";
+                } 
+            outfile << std::endl;
+            }
+            outfile.close();
+        }
+        if(GripId == 7)
+        {
+            // std::cout << "g7";
+            for (int i = 0;i < pole_rows;++i)
+            {
+                for (int j = 0;j < pole_cols;++j)
+                {
+                    double gdcpos[6] = {target_pole->p_map[i][j][0],target_pole->p_map[i][j][1],target_pole->p_map[i][j][2],target_pole->p_map[i][j][3],target_pole->p_map[i][j][4],target_pole->p_map[i][j][5]};
+                    if(target_pole->p_map[i][j][0] * target_pole->p_map[i][j][0] + target_pole->p_map[i][j][1] * target_pole->p_map[i][j][1] + 
+                    (target_pole->p_map[i][j][2] - len[0] - len[1]) * (target_pole->p_map[i][j][2] - len[0] - len[1]) - 
+                    (len[2] + len[3] + len[4] + len[5] + len[6]) * (len[2] + len[3] + len[4] + len[5] + len[6]) > 0)
+                    {
+                        target_pole->transflag[i][j] = 0;
+                        // break; //标志位设0,不可过渡
+                    }
+                    else if(climbot5d_G2.IKine(gdcpos,curgdj,out_gdjpos) == 0)
+                    {
+                        //target_pole->p_map[i][j][6] = 1; //标志位设1,可过渡
+                        target_pole->transflag[i][j] = 1;
+                    }  
+                    else
+                    {
+                        //target_pole->p_map[i][j][6] = 0; //标志位设0,不可过渡
+                        target_pole->transflag[i][j] = 0;
+                    }  //判断逆解是否存在
+                    outfile << target_pole->transflag[i][j]<< " ";
+                } 
+            outfile << std::endl;
+            }
+            outfile.close();
+        }
+    }
+    else
+    {
+        std::cout << "DOF setting is error!" << std::endl;
+    }
+ 
 }
 
 int Discretepole::simulationResultPrint(std::vector<double> &p0,
@@ -264,7 +362,7 @@ int Discretepole::simulationResultPrint(std::vector<double> &p0,
                                         const int GripId,
                                         std::vector<double>& joint_val)
 {
-    poleTransition(p0, p1, length_cur, alpha_cur, GripId);
+    poleTransition(p0, p1, length_cur, alpha_cur, GripId, DOF_flag);
     
     //初始化机器人
     double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
@@ -282,22 +380,22 @@ int Discretepole::simulationResultPrint(std::vector<double> &p0,
                             target_pole->p_map[length_tar][alpha_tar][4],target_pole->p_map[length_tar][alpha_tar][5]};
         if(climbot6d_G1.IKine(gdcpos,curgdj,out_gdjpos) == 0)
         {
-            // std::cout << "位姿 =";
-            // for (size_t r = 0; r < 6;++r)
-            // {
-            //     // std::cout << out_gdjpos[r]<< " ";
-            //     std::cout << target_pole->p_map[length_tar][alpha_tar][r] << " ";
-            // }
-            // std::cout << std::endl;
-            // //仿真用输出值
-            // std::cout << "P=";
-            // std::cout <<std::fixed<<std::setprecision(1)<< -out_gdjpos[5] << ",";     
-            // std::cout << std::fixed<<std::setprecision(1)<<out_gdjpos[4]<< ",";  
-            // std::cout << std::fixed<<std::setprecision(1)<<-out_gdjpos[3] << ",";   
-            // std::cout <<std::fixed<<std::setprecision(1)<<(out_gdjpos[2] -  90)<< ",";      
-            // std::cout <<std::fixed<<std::setprecision(1)<< -(out_gdjpos[1] - 90) << ",";
-            // std::cout <<std::fixed<<std::setprecision(1)<< out_gdjpos[0]<< ",";
-            // std::cout << ";"<<std::endl;
+            std::cout << "位姿 =";
+            for (size_t r = 0; r < 6;++r)
+            {
+                std::cout << out_gdjpos[r]<< ",";
+                // std::cout << target_pole->p_map[length_tar][alpha_tar][r] << " ";
+            }
+            std::cout << std::endl;
+            //仿真用输出值
+            std::cout << "P=";
+            std::cout <<std::fixed<<std::setprecision(1)<< -out_gdjpos[5] << ",";     
+            std::cout << std::fixed<<std::setprecision(1)<<out_gdjpos[4]<< ",";  
+            std::cout << std::fixed<<std::setprecision(1)<<-out_gdjpos[3] << ",";   
+            std::cout <<std::fixed<<std::setprecision(1)<<(out_gdjpos[2] -  90)<< ",";      
+            std::cout <<std::fixed<<std::setprecision(1)<< -(out_gdjpos[1] - 90) << ",";
+            std::cout <<std::fixed<<std::setprecision(1)<< out_gdjpos[0]<< ",";
+            std::cout << ";"<<std::endl;
 
             joint_val = {-out_gdjpos[5], out_gdjpos[4], -out_gdjpos[3], (out_gdjpos[2] - 90), -(out_gdjpos[1] - 90), out_gdjpos[0]};
 
@@ -322,18 +420,18 @@ int Discretepole::simulationResultPrint(std::vector<double> &p0,
             std::cout << "位姿 =";
             for (size_t r = 0; r < 6;++r)
             {
-                std::cout << out_gdjpos[r] << " ";
-                // std::cout << target_pole->p_map[length_tar][alpha_tar][r] << " ";
+                // std::cout << out_gdjpos[r] << " ";
+                std::cout << target_pole->p_map[length_tar][alpha_tar][r] << " ";
             }                    
             std::cout << std::endl;
             std::cout << "P=";
             std::cout <<std::fixed<<std::setprecision(1)<< -out_gdjpos[5] << ",";     
-            std::cout << std::fixed<<std::setprecision(1)<<-out_gdjpos[4]<< ",";  
+            std::cout << std::fixed<<std::setprecision(1)<<out_gdjpos[4]<< ",";  
             std::cout << std::fixed<<std::setprecision(1)<<-out_gdjpos[3] << ",";   
-            std::cout <<std::fixed<<std::setprecision(1)<<-(out_gdjpos[2] -  90)<< ",";      
-            std::cout <<std::fixed<<std::setprecision(1)<< (out_gdjpos[1] - 90) << ",";
+            std::cout <<std::fixed<<std::setprecision(1)<<(out_gdjpos[2] -  90)<< ",";      
+            std::cout <<std::fixed<<std::setprecision(1)<< -(out_gdjpos[1] - 90) << ",";
             std::cout <<std::fixed<<std::setprecision(1)<< out_gdjpos[0]<< ",";
-            std::cout << ";" << std::endl;
+            std::cout << ";"<<std::endl;
             joint_val = {-out_gdjpos[5], out_gdjpos[4], -out_gdjpos[3], (out_gdjpos[2] - 90), -(out_gdjpos[1] - 90), out_gdjpos[0]};
             return 1;
         } 
@@ -352,7 +450,7 @@ int Discretepole::getJointResult(std::vector<double> &p0,
                         const int GripId,double *joint_val)
 {
 
-    poleTransition(p0, p1, length_cur, alpha_cur, GripId);
+    poleTransition(p0, p1, length_cur, alpha_cur, GripId, DOF_flag);
     
     //初始化机器人
     double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
@@ -382,9 +480,13 @@ int Discretepole::getJointResult(std::vector<double> &p0,
 void Discretepole::poleTransition(std::vector<double> &p0,
                                 std::vector<double> &p1,
                                 int length,int alpha,
-                                const int GripId)
+                                const int GripId,
+                                const int DOFflag)
 {
     Discretepole();
+
+    DOF_flag = DOFflag;
+
     for(int i = 0;i<6;i++)
     {
         cur_pole->p[i] = p0[i];
@@ -513,11 +615,11 @@ void Discretepole::poleTransition(std::vector<double> &p0,
     mtx_pole2pole1.R31 = out_vecx[2];mtx_pole2pole1.R32 = out_vecy[2];mtx_pole2pole1.R33 = out_vecz[2];
     mtx_pole2pole1.X = 0;            mtx_pole2pole1.Y = 0;            mtx_pole2pole1.Z = 0;  //xyz不作设置
     Trans_MtxToPos(&mtx_pole2pole1,pos_p2top1); //杆件2点在基座坐标系下表示
-/*
-    std::cout<<"mtx.r11="<<mtx_pole2cur_pole->R11<<"mtx.r12="<<mtx_pole2cur_pole->R12<<"mtx.r13="<<mtx_pole2cur_pole->R13<<std::endl;
-    std::cout<<"mtx.r21="<<mtx_pole2cur_pole->R21<<"mtx.r22="<<mtx_pole2cur_pole->R22<<"mtx.r23="<<mtx_pole2cur_pole->R23<<std::endl;
-    std::cout<<"mtx.r31="<<mtx_pole2cur_pole->R31<<"mtx.r32="<<mtx_pole2cur_pole->R32<<"mtx.r33="<<mtx_pole2cur_pole->R33<<std::endl;
-*/    
+
+    // std::cout<<"mtx.r11="<<mtx_pole2pole1.R11<<"mtx.r12="<<mtx_pole2pole1.R12<<"mtx.r13="<<mtx_pole2pole1.R13<<std::endl;
+    // std::cout<<"mtx.r21="<<mtx_pole2pole1.R21<<"mtx.r22="<<mtx_pole2pole1.R22<<"mtx.r23="<<mtx_pole2pole1.R23<<std::endl;
+    // std::cout<<"mtx.r31="<<mtx_pole2pole1.R31<<"mtx.r32="<<mtx_pole2pole1.R32<<"mtx.r33="<<mtx_pole2pole1.R33<<std::endl;
+  
     // std::cout<< "pos";
     // for(int k=0;k<6;++k)
     // {
@@ -542,10 +644,10 @@ void Discretepole::poleTransition(std::vector<double> &p0,
     cur_pole->p_z = out_point[2];
     PointCoordinateC(&mtx_base2pole1,in_p2,out_point);
     PointCoordinateC(&mtx_rotx,out_point,out_point);
-    temp[0] = (out_point[0] - cur_pole->p_x) / m_rows;
-    temp[1] = (out_point[1] - cur_pole->p_y) / m_rows;
-    temp[2] = (out_point[2] - cur_pole->p_z) / m_rows;
-    temp[3] = 360.0 / m_cols;
+    temp[0] = (out_point[0] - cur_pole->p_x) / pole_rows;
+    temp[1] = (out_point[1] - cur_pole->p_y) / pole_rows;
+    temp[2] = (out_point[2] - cur_pole->p_z) / pole_rows;
+    temp[3] = 360.0 / pole_cols;
     cur_pole->p_w = 0;
     cur_pole->p_p = 0;
     cur_pole->p_r = 0;
@@ -557,18 +659,18 @@ void Discretepole::poleTransition(std::vector<double> &p0,
     target_pole->p_z = out_point[2];
     PointCoordinateC(&mtx_base2pole1,in_p4,out_point);
     PointCoordinateC(&mtx_rotx,out_point,out_point);
-    temp[4] = (out_point[0] - target_pole->p_x) / m_rows;
-    temp[5] = (out_point[1] - target_pole->p_y) / m_rows;
-    temp[6] = (out_point[2] - target_pole->p_z) / m_rows;
-    temp[7] = 360.0 / m_cols;
+    temp[4] = (out_point[0] - target_pole->p_x) / pole_rows;
+    temp[5] = (out_point[1] - target_pole->p_y) / pole_rows;
+    temp[6] = (out_point[2] - target_pole->p_z) / pole_rows;
+    temp[7] = 360.0 / pole_cols;
     target_pole->p_w = pos_p2top1[3];
     target_pole->p_p = pos_p2top1[4];
     target_pole->p_r = pos_p2top1[5];
 
     AssignmentData(temp, cur_pole, target_pole);
 
-    // std::cout << "赋值后起点 = " << target_pole->p_map[0][0][0] << " " << target_pole->p_map[0][0][1] << " " << target_pole->p_map[0][0][2] << " ";
-    // std::cout << target_pole->p_map[0][0][3] << " " << target_pole->p_map[0][0][4] << " " << target_pole->p_map[0][0][5] << std::endl;
+    // std::cout << "赋值后起点 = " << target_pole->p_map[70][64][0] << " " << target_pole->p_map[70][64][1] << " " << target_pole->p_map[70][64][2] << " ";
+    // std::cout << target_pole->p_map[70][64][3] << " " << target_pole->p_map[70][64][4] << " " << target_pole->p_map[70][64][5] << std::endl;
     // std::cout << "赋值后终点 = " << target_pole->p_map[127][127][0] << " " << target_pole->p_map[127][127][1] << " " << target_pole->p_map[127][127][2] <<" ";
     // std::cout <<target_pole->p_map[127][127][3] << " " << target_pole->p_map[127][127][4] << " " << target_pole->p_map[127][127][5] << std::endl;
 
@@ -761,10 +863,10 @@ Poles Discretepole::memberDisreteforQTree(std::vector<double> &p0,
         PointCoordinateC(&mtx_G0_G7,out_point,out_point);
     }
 
-    temp[0] = (out_point[0] - cur_pole->p_x) / m_rows;
-    temp[1] = (out_point[1] - cur_pole->p_y) / m_rows;
-    temp[2] = (out_point[2] - cur_pole->p_z) / m_rows;
-    temp[3] = 360.0 / m_cols;
+    temp[0] = (out_point[0] - cur_pole->p_x) / pole_rows;
+    temp[1] = (out_point[1] - cur_pole->p_y) / pole_rows;
+    temp[2] = (out_point[2] - cur_pole->p_z) / pole_rows;
+    temp[3] = 360.0 / pole_cols;
     cur_pole->p_w = 0;
     cur_pole->p_p = 0;
     cur_pole->p_r = 0;
@@ -787,10 +889,10 @@ Poles Discretepole::memberDisreteforQTree(std::vector<double> &p0,
         PointCoordinateC(&mtx_G0_G7,out_point,out_point);
     }
 
-    temp[4] = (out_point[0] - target_pole->p_x) / m_rows;
-    temp[5] = (out_point[1] - target_pole->p_y) / m_rows;
-    temp[6] = (out_point[2] - target_pole->p_z) / m_rows;
-    temp[7] = 360.0 / m_cols;
+    temp[4] = (out_point[0] - target_pole->p_x) / pole_rows;
+    temp[5] = (out_point[1] - target_pole->p_y) / pole_rows;
+    temp[6] = (out_point[2] - target_pole->p_z) / pole_rows;
+    temp[7] = 360.0 / pole_cols;
     target_pole->p_w = pos_p2top1[3];
     target_pole->p_p = pos_p2top1[4];
     target_pole->p_r = pos_p2top1[5];
@@ -812,16 +914,16 @@ int transwithIK(const std::vector<double> &p0,const std::vector<double> &p1,cons
         pole2.p[i] = p1[i];
     }
     //展开数组初始化
-    pole1.p_map = new double**[m_rows] ;
-    pole2.p_map = new double**[m_rows] ;
-    for( int i = 0 ; i < m_rows ; ++i )
+    pole1.p_map = new double**[pole_rows] ;
+    pole2.p_map = new double**[pole_rows] ;
+    for( int i = 0 ; i < pole_rows ; ++i )
     {
-        pole1.p_map[i] = new double*[m_cols] ;
-        pole2.p_map[i] = new double*[m_cols] ;
+        pole1.p_map[i] = new double*[pole_cols] ;
+        pole2.p_map[i] = new double*[pole_cols] ;
     }
-    for( int i = 0 ; i < m_rows ; ++i )
+    for( int i = 0 ; i < pole_rows ; ++i )
     {
-        for( int j = 0 ; j < m_cols ; ++j )
+        for( int j = 0 ; j < pole_cols ; ++j )
         {
             pole1.p_map[i][j] = new double[6] ;
             pole2.p_map[i][j] = new double[6] ;
@@ -851,13 +953,13 @@ int transwithIK(const std::vector<double> &p0,const std::vector<double> &p1,cons
     float start_p[6];
     for(int i = 0;i<3;++i)
     {
-        start_p[i] = pole1.p[i] + (pole1.p[i+3] - pole1.p[i]) / m_rows * length_p1;  
+        start_p[i] = pole1.p[i] + (pole1.p[i+3] - pole1.p[i]) / pole_rows * length_p1;  
         //std::cout<<"start_p["<<i<<"]"<<start_p[i]<<std::endl;
     }   //起点位置设置
 
     //double alpha = 0.0;   //弧度
 
-    double alpha = -3.1416 + 6.2832 / m_cols * alpha_p1;
+    double alpha = -3.1416 + 6.2832 / pole_cols * alpha_p1;
 
     MtxKine mtx_rotx;
     mtx_rotx.R11 = 1.0;mtx_rotx.R12 = 0.0;mtx_rotx.R13 = 0.0;
@@ -975,10 +1077,10 @@ int transwithIK(const std::vector<double> &p0,const std::vector<double> &p1,cons
     {
         PointCoordinateC(&mtx_G0_G7,out_point,out_point);
     }
-    temp[0] = (out_point[0] - pole1.p_x) / m_rows;
-    temp[1] = (out_point[1] - pole1.p_y) / m_rows;
-    temp[2] = (out_point[2] - pole1.p_z) / m_rows;
-    temp[3] = 360.0 / m_cols;
+    temp[0] = (out_point[0] - pole1.p_x) / pole_rows;
+    temp[1] = (out_point[1] - pole1.p_y) / pole_rows;
+    temp[2] = (out_point[2] - pole1.p_z) / pole_rows;
+    temp[3] = 360.0 / pole_cols;
     pole1.p_w = 0;
     pole1.p_p = 0;
     pole1.p_r = 0;
@@ -998,18 +1100,18 @@ int transwithIK(const std::vector<double> &p0,const std::vector<double> &p1,cons
     {
         PointCoordinateC(&mtx_G0_G7,out_point,out_point);
     }
-    temp[4] = (out_point[0] - pole2.p_x) / m_rows;
-    temp[5] = (out_point[1] - pole2.p_y) / m_rows;
-    temp[6] = (out_point[2] - pole2.p_z) / m_rows;
-    temp[7] = 360.0 / m_cols;
+    temp[4] = (out_point[0] - pole2.p_x) / pole_rows;
+    temp[5] = (out_point[1] - pole2.p_y) / pole_rows;
+    temp[6] = (out_point[2] - pole2.p_z) / pole_rows;
+    temp[7] = 360.0 / pole_cols;
     pole2.p_w = pos_p2top1[3];
     pole2.p_p = pos_p2top1[4];
     pole2.p_r = pos_p2top1[5];
 
     //赋值
-     for(int i = 0;i < m_rows;++i)
+     for(int i = 0;i < pole_rows;++i)
     {
-        for(int j = 0;j < m_cols;++j)
+        for(int j = 0;j < pole_cols;++j)
         {
             for(int k = 0;k < 6;++k)
             {
@@ -1053,12 +1155,12 @@ int transwithIK(const std::vector<double> &p0,const std::vector<double> &p1,cons
 
 MtxKine getCurBaseMtx(int angle)
 {
-    double res_angle = -3.1416 + 6.2832 / m_cols * (angle);
+    double res_angle = -3.1416 + 6.2832 / pole_cols * (angle);
     MtxKine mtx_rotx;       //基座矩阵
     mtx_rotx.R11 = 1.0;mtx_rotx.R21 = 0.0;mtx_rotx.R31 = 0.0;
     mtx_rotx.R12 = 0.0;mtx_rotx.R22 = cos(res_angle);mtx_rotx.R32 = sin(res_angle);
     mtx_rotx.R13 = 0.0;mtx_rotx.R23 = -sin(res_angle);mtx_rotx.R33 = cos(res_angle);
-    mtx_rotx.X = 0.0;            mtx_rotx.Y = 0.0;            mtx_rotx.Z = 0.0;
+    mtx_rotx.X = 0;            mtx_rotx.Y = 0.0;            mtx_rotx.Z = 0;
     return mtx_rotx;
 }
 
@@ -1067,7 +1169,7 @@ MtxKine getCurMtx(std::vector<double> &cur_truss,int length,int angle)
     double start_p[3];
     for(int i = 0;i<3;++i)
     {
-        start_p[i] = cur_truss[i] + (cur_truss[i+3] - cur_truss[i]) / m_rows * (length);
+        start_p[i] = cur_truss[i] + (cur_truss[i+3] - cur_truss[i]) / pole_rows * (length);
     }   //起点位置设置
     Vector pole_v;
     pole_v.X = cur_truss[3] - cur_truss[0];
@@ -1116,14 +1218,56 @@ MtxKine getCurMtx(std::vector<double> &cur_truss,int length,int angle)
     return mtx_base2pole1;
 }
 
-void transPointToWorld(float* in_point,std::vector<double> &cur_truss,int length,int angle,float* out_point)
+MtxKine getCurMtxfromJointAngle(double* joint_angle,const int Grip_ID)
 {
-    MtxKine mtxbase, curmtx;
-    mtxbase = getCurBaseMtx(angle);
-    curmtx = getCurMtx(cur_truss, length, angle);
+    MtxKine cur_mtx;
+    Kine_CR_SixDoF_G1 climbot6d_g1;
+    Kine_CR_SixDoF_G2 climbot6d_g2;
+    double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
 
-    PointCoordinateC_(&mtxbase, in_point, out_point);
-    PointCoordinateC_(&curmtx, out_point, out_point);    
-    // std::cout << "trans"<<out_point[0] << " " << out_point[1] << " " << out_point[2] << std::endl;
+    if(Grip_ID == 0)
+    {
+        climbot6d_g1.Set_Length(len);
+        double cur_pos[6];
+        climbot6d_g1.FKine(joint_angle, cur_pos);
+        Trans_PosToMtx(cur_pos, &cur_mtx, 0);
+        return cur_mtx;
+    }
+    else if(Grip_ID == 7)
+    {
+        climbot6d_g2.Set_Length(len);
+        double cur_pos[6];
+        climbot6d_g2.FKine(joint_angle, cur_pos);
+        Trans_PosToMtx(cur_pos, &cur_mtx, 0);
+        return cur_mtx;
+    }
+    else
+    {
+        std::cout << "Grip_ID error!" << std::endl;
+    }
+    
+    return cur_mtx;
 }
 
+void transPointToWorld(float* in_point,std::vector<double> &cur_truss,int length,int angle,float* out_point,const int Grip_ID)
+{
+    MtxKine mtxbase, curmtx;
+    if(Grip_ID == 0)
+        mtxbase = getCurBaseMtx(angle);
+    else if(Grip_ID == 7)
+        mtxbase = getCurBaseMtx(angle - pole_cols / 2);
+    else
+        std::cout << "Grip_ID error!" << std::endl;
+
+
+    // std::cout << curmtx.R11 << " " << curmtx.R12 << " "<<curmtx.R13 << std::endl;
+    // std::cout << curmtx.R21 << " " << curmtx.R22 << " "<<curmtx.R23 << std::endl;
+    // std::cout << curmtx.R31 << " " << curmtx.R32 << " "<<curmtx.R33 << std::endl;
+    // std::cout << curmtx.X << " " << curmtx.Y << " "<<curmtx.Z << std::endl;
+    curmtx = getCurMtx(cur_truss, length, angle);
+
+
+    PointCoordinateC_(&mtxbase, in_point, out_point);
+    PointCoordinateC_(&curmtx, out_point, out_point);   
+    // std::cout << "trans"<<out_point[0] << " " << out_point[1] << " " << out_point[2] << std::endl;
+}

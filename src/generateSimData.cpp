@@ -31,7 +31,8 @@ void SimDataGenerate::getJointAngle(std::vector<double> &cur_truss, std::vector<
 void SimDataGenerate::generatePathTxt(std::vector<std::vector<int> >& point_list,
                                         std::vector<std::vector<double>>& truss,
                                         std::vector<int>& truss_list,
-                                        std::vector<int>& single_num)
+                                        std::vector<int>& single_num,
+                                        std::vector<std::vector<double>>& joint_val_list)
 {
     std::ofstream outfile;
     outfile.open("../src/jointvalue.txt");  //输出仿真用地图列表
@@ -51,6 +52,8 @@ void SimDataGenerate::generatePathTxt(std::vector<std::vector<int> >& point_list
         if(step_counter < single_num[i])
         {
             getJointAngle(truss[truss_list[i] - 1], truss[truss_list[i] - 1], point_list[global_counter][0], point_list[global_counter][1], point_list[global_counter + 1][0], point_list[global_counter + 1][1], global_counter,joint_val);
+            std::vector<double> tmp_joint_val = {joint_val[5],-joint_val[4]+90,joint_val[3] + 90,-joint_val[2], joint_val[1],-joint_val[0]};
+            joint_val_list.push_back(tmp_joint_val);
             outfile << "P=";
             for (size_t t = 0; t < 6;++t)
             {
@@ -74,6 +77,8 @@ void SimDataGenerate::generatePathTxt(std::vector<std::vector<int> >& point_list
                 break;  //最后一步不存在,跳出
             }
             getJointAngle(truss[truss_list[i] - 1], truss[truss_list[i + 1] - 1], point_list[global_counter][0], point_list[global_counter][1], point_list[global_counter + 1][0], point_list[global_counter + 1][1], global_counter, joint_val);
+            std::vector<double> tmp_joint_val = {joint_val[5],-joint_val[4]+90,joint_val[3] + 90,-joint_val[2], joint_val[1],-joint_val[0]};
+            joint_val_list.push_back(tmp_joint_val);
             outfile << "P=";
             for (size_t t = 0; t < 6;++t)
             {

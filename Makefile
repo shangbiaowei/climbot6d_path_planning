@@ -123,33 +123,6 @@ climbot6d/fast:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/build
 .PHONY : climbot6d/fast
 
-src/Astar.o: src/Astar.cpp.o
-
-.PHONY : src/Astar.o
-
-# target to build an object file
-src/Astar.cpp.o:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/Astar.cpp.o
-.PHONY : src/Astar.cpp.o
-
-src/Astar.i: src/Astar.cpp.i
-
-.PHONY : src/Astar.i
-
-# target to preprocess a source file
-src/Astar.cpp.i:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/Astar.cpp.i
-.PHONY : src/Astar.cpp.i
-
-src/Astar.s: src/Astar.cpp.s
-
-.PHONY : src/Astar.s
-
-# target to generate assembly for a file
-src/Astar.cpp.s:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/Astar.cpp.s
-.PHONY : src/Astar.cpp.s
-
 src/Coordinate.o: src/Coordinate.cpp.o
 
 .PHONY : src/Coordinate.o
@@ -258,6 +231,60 @@ src/QuadTree.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/QuadTree.cpp.s
 .PHONY : src/QuadTree.cpp.s
 
+src/gaitplan.o: src/gaitplan.cpp.o
+
+.PHONY : src/gaitplan.o
+
+# target to build an object file
+src/gaitplan.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gaitplan.cpp.o
+.PHONY : src/gaitplan.cpp.o
+
+src/gaitplan.i: src/gaitplan.cpp.i
+
+.PHONY : src/gaitplan.i
+
+# target to preprocess a source file
+src/gaitplan.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gaitplan.cpp.i
+.PHONY : src/gaitplan.cpp.i
+
+src/gaitplan.s: src/gaitplan.cpp.s
+
+.PHONY : src/gaitplan.s
+
+# target to generate assembly for a file
+src/gaitplan.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gaitplan.cpp.s
+.PHONY : src/gaitplan.cpp.s
+
+src/generateSimData.o: src/generateSimData.cpp.o
+
+.PHONY : src/generateSimData.o
+
+# target to build an object file
+src/generateSimData.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o
+.PHONY : src/generateSimData.cpp.o
+
+src/generateSimData.i: src/generateSimData.cpp.i
+
+.PHONY : src/generateSimData.i
+
+# target to preprocess a source file
+src/generateSimData.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/generateSimData.cpp.i
+.PHONY : src/generateSimData.cpp.i
+
+src/generateSimData.s: src/generateSimData.cpp.s
+
+.PHONY : src/generateSimData.s
+
+# target to generate assembly for a file
+src/generateSimData.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/generateSimData.cpp.s
+.PHONY : src/generateSimData.cpp.s
+
 src/globalpath.o: src/globalpath.cpp.o
 
 .PHONY : src/globalpath.o
@@ -284,6 +311,33 @@ src/globalpath.s: src/globalpath.cpp.s
 src/globalpath.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/globalpath.cpp.s
 .PHONY : src/globalpath.cpp.s
+
+src/gpoptidata.o: src/gpoptidata.cpp.o
+
+.PHONY : src/gpoptidata.o
+
+# target to build an object file
+src/gpoptidata.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.o
+.PHONY : src/gpoptidata.cpp.o
+
+src/gpoptidata.i: src/gpoptidata.cpp.i
+
+.PHONY : src/gpoptidata.i
+
+# target to preprocess a source file
+src/gpoptidata.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.i
+.PHONY : src/gpoptidata.cpp.i
+
+src/gpoptidata.s: src/gpoptidata.cpp.s
+
+.PHONY : src/gpoptidata.s
+
+# target to generate assembly for a file
+src/gpoptidata.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.s
+.PHONY : src/gpoptidata.cpp.s
 
 src/m_Matrix.o: src/m_Matrix.cpp.o
 
@@ -339,6 +393,60 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/motionplan.o: src/motionplan.cpp.o
+
+.PHONY : src/motionplan.o
+
+# target to build an object file
+src/motionplan.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.o
+.PHONY : src/motionplan.cpp.o
+
+src/motionplan.i: src/motionplan.cpp.i
+
+.PHONY : src/motionplan.i
+
+# target to preprocess a source file
+src/motionplan.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.i
+.PHONY : src/motionplan.cpp.i
+
+src/motionplan.s: src/motionplan.cpp.s
+
+.PHONY : src/motionplan.s
+
+# target to generate assembly for a file
+src/motionplan.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.s
+.PHONY : src/motionplan.cpp.s
+
+src/pathallocate.o: src/pathallocate.cpp.o
+
+.PHONY : src/pathallocate.o
+
+# target to build an object file
+src/pathallocate.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o
+.PHONY : src/pathallocate.cpp.o
+
+src/pathallocate.i: src/pathallocate.cpp.i
+
+.PHONY : src/pathallocate.i
+
+# target to preprocess a source file
+src/pathallocate.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/pathallocate.cpp.i
+.PHONY : src/pathallocate.cpp.i
+
+src/pathallocate.s: src/pathallocate.cpp.s
+
+.PHONY : src/pathallocate.s
+
+# target to generate assembly for a file
+src/pathallocate.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/pathallocate.cpp.s
+.PHONY : src/pathallocate.cpp.s
+
 src/pole.o: src/pole.cpp.o
 
 .PHONY : src/pole.o
@@ -366,6 +474,33 @@ src/pole.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/pole.cpp.s
 .PHONY : src/pole.cpp.s
 
+src/robotTorque.o: src/robotTorque.cpp.o
+
+.PHONY : src/robotTorque.o
+
+# target to build an object file
+src/robotTorque.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o
+.PHONY : src/robotTorque.cpp.o
+
+src/robotTorque.i: src/robotTorque.cpp.i
+
+.PHONY : src/robotTorque.i
+
+# target to preprocess a source file
+src/robotTorque.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.i
+.PHONY : src/robotTorque.cpp.i
+
+src/robotTorque.s: src/robotTorque.cpp.s
+
+.PHONY : src/robotTorque.s
+
+# target to generate assembly for a file
+src/robotTorque.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.s
+.PHONY : src/robotTorque.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -375,9 +510,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... climbot6d"
-	@echo "... src/Astar.o"
-	@echo "... src/Astar.i"
-	@echo "... src/Astar.s"
 	@echo "... src/Coordinate.o"
 	@echo "... src/Coordinate.i"
 	@echo "... src/Coordinate.s"
@@ -390,18 +522,36 @@ help:
 	@echo "... src/QuadTree.o"
 	@echo "... src/QuadTree.i"
 	@echo "... src/QuadTree.s"
+	@echo "... src/gaitplan.o"
+	@echo "... src/gaitplan.i"
+	@echo "... src/gaitplan.s"
+	@echo "... src/generateSimData.o"
+	@echo "... src/generateSimData.i"
+	@echo "... src/generateSimData.s"
 	@echo "... src/globalpath.o"
 	@echo "... src/globalpath.i"
 	@echo "... src/globalpath.s"
+	@echo "... src/gpoptidata.o"
+	@echo "... src/gpoptidata.i"
+	@echo "... src/gpoptidata.s"
 	@echo "... src/m_Matrix.o"
 	@echo "... src/m_Matrix.i"
 	@echo "... src/m_Matrix.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/motionplan.o"
+	@echo "... src/motionplan.i"
+	@echo "... src/motionplan.s"
+	@echo "... src/pathallocate.o"
+	@echo "... src/pathallocate.i"
+	@echo "... src/pathallocate.s"
 	@echo "... src/pole.o"
 	@echo "... src/pole.i"
 	@echo "... src/pole.s"
+	@echo "... src/robotTorque.o"
+	@echo "... src/robotTorque.i"
+	@echo "... src/robotTorque.s"
 .PHONY : help
 
 

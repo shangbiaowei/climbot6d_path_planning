@@ -19,7 +19,8 @@ class SimDataGenerate
         void generatePathTxt(std::vector<std::vector<int> >& point_list,
                             std::vector<std::vector<double>>& truss,
                             std::vector<int>& truss_list,
-                            std::vector<int>& single_num);
+                            std::vector<int>& single_num,
+                            std::vector<std::vector<double>>& joint_val_list);
 
     public:
         SimDataGenerate();

@@ -1,4 +1,3 @@
-#include <vector>
 #include "../include/globalpath.h"
 
 using namespace std;
@@ -18,12 +17,15 @@ void globalPathPlan::outPut(vector<vector<int>> &all_pathway)
 {
 	for(int i=0;i<all_pathway.size();i++)
 	{
-        cout << "第" << i+1 << "条路径:	";
+        // cout << "第" << i+1 << "条路径:	";
         for (int j = 0; j < all_pathway[i].size();++j)
         {
-            cout << all_pathway[i][j]+1<< " ";
+            if(all_pathway[i].size() < 5)
+            {
+                cout << all_pathway[i][j]+1<< " ";
+            }
         }
-        cout << endl;
+        
     }
 	cout<<endl;
 }
@@ -73,7 +75,7 @@ vector<vector<int>> globalPathPlan::findAllPath(vector<vector<int>>& adj_mat,int
 }
 
 //构建邻接矩阵
-vector<vector<int>> globalPathPlan::adjMat(vector<vector<double> > &pole_mat)
+vector<vector<int>> globalPathPlan::adjMat(vector<vector<double> > &pole_mat,const int DOF_flag)
 {
     int pole_num = pole_mat.size();
     vector<vector<int> > res(pole_num,vector<int>(pole_num,0));
@@ -87,7 +89,19 @@ vector<vector<int>> globalPathPlan::adjMat(vector<vector<double> > &pole_mat)
             vector<double> temp1 = {pole_mat[i][0], pole_mat[i][1], pole_mat[i][2], pole_mat[i][3], pole_mat[i][4], pole_mat[i][5]};
             vector<double> temp2 = {pole_mat[j][0], pole_mat[j][1], pole_mat[j][2], pole_mat[j][3], pole_mat[j][4], pole_mat[j][5]};
 
-            if (transMat(temp1, temp2,first_grippoint,sec_grippoint) == 1)
+            // if (transMat(temp1, temp2,first_grippoint,sec_grippoint) == 1)
+            // {
+            //     if(i == j)
+            //     {
+            //         res[i][j] = 0;
+            //     }
+            //     else
+            //         res[i][j] = 1;
+            // }
+            // else
+            //     res[i][j] = 0;
+
+            if(fastTransMat(temp1,temp2,DOF_flag) == 1)
             {
                 if(i == j)
                 {
@@ -104,12 +118,17 @@ vector<vector<int>> globalPathPlan::adjMat(vector<vector<double> > &pole_mat)
 }
 
 //可过渡判断
-int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::vector<int> &first_grippoint,std::vector<int> &sec_grippoint)
+int globalPathPlan::transMat(vector<double> &pole1,
+                            vector<double> &pole2,
+                            std::vector<int> &first_grippoint,
+                            std::vector<int> &sec_grippoint,
+                            std::vector<int> &base_point,
+                            const int DOF_flag)
 {
-
     double point1[6];
     double min_disp1p2 = minDistance(pole1, pole2, point1);
     vector<double> tmp = {point1[0], point1[1], point1[2]};
+
     int scale = 1;
     double alpha = 0;
 
@@ -128,9 +147,6 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
 
     //定义世界坐标系
     Vector World_Z;
-    // Vector World_X,World_Y, World_Z; //世界坐标系向量
-    // World_X.X = 1;World_X.Y = 0;World_X.Z = 0;
-    // World_Y.X = 0;World_Y.Y = 1;World_Y.Z = 0;
     World_Z.X = 0;World_Z.Y = 0;World_Z.Z = 1;
 
     if(pole1[0] == pole1[3] && pole1[1] == pole1[4])    //杆件平行于世界坐标系Z轴
@@ -152,14 +168,11 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
 
     Vector tmp_p1base_p2 = {point1[0] - (pole2[0] + pole2[3]) / 2, point1[1] - (pole2[1] + pole2[4]) / 2, point1[2] - (pole2[2] + pole2[5]) / 2};
     Vector project_p1base_p2_y = vec_projection(tmp_p1base_p2, pole1_y);
-    // project_p1base_p2_y = Norm_Vec(project_p1base_p2_y);
     Vector project_p1base_p2_z = vec_projection(tmp_p1base_p2, pole1_z);
-    // project_p1base_p2_z = Norm_Vec(project_p1base_p2_z);
     Vector project_p1base_p2_yOz = operator+(project_p1base_p2_y, project_p1base_p2_z);
     Vector project_p2_x_p1_y = vec_projection(pole2_x, pole1_y);
     Vector project_p2_x_p1_z = vec_projection(pole2_x, pole1_z);
     alpha = v_angle(pole1_z, project_p1base_p2_yOz);
-
 
     if(alpha >= 1.56 && alpha < 3.13 &&
        fabs(project_p2_x_p1_y.X) < 0.1 && 
@@ -223,7 +236,6 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
         alpha = 1.5708;
     }
 
-
     //缺少方向，绕x轴，顺时针为正,pole1_z转向投影
     Vector tmp_pole1_z_project_pole2_x_pole1_yOz = operator&(pole1_z, project_p1base_p2_yOz);
     tmp_pole1_z_project_pole2_x_pole1_yOz = Norm_Vec(tmp_pole1_z_project_pole2_x_pole1_yOz);
@@ -247,21 +259,18 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
         {
             if(pole1[i] != point1[i])
             {
-                scale = fabs((point1[i] - pole1[i]) / ((pole1[i] - pole1[i+3]) / m_rows));
-                if(scale > m_rows - 5)
+                scale = fabs((point1[i] - pole1[i]) / ((pole1[i] - pole1[i+3]) / pole_rows));
+                if(scale > pole_rows - 5)
                 {
-                    point1[i] = pole1[i] + (pole1[i + 3] - pole1[i]) / m_rows * (scale - 5);
+                    point1[i] = pole1[i] + (pole1[i + 3] - pole1[i]) / pole_rows * (scale - 5);
                 }
                 else
                 {
-                    point1[i] = pole1[i] + (pole1[i + 3] - pole1[i]) / m_rows * (scale + 5);
+                    point1[i] = pole1[i] + (pole1[i + 3] - pole1[i]) / pole_rows * (scale + 5);
                 }
                 break;
             }
         }
-        // point1[0] = pole1[0] + (pole1[0 + 3] - pole1[0]) / m_rows * (scale + 5);
-        // point1[1] = pole1[1] + (pole1[1 + 3] - pole1[1]) / m_rows * (scale + 5);
-        // point1[2] = pole1[2] + (pole1[2 + 3] - pole1[2]) / m_rows * (scale + 5);
     }
 
 
@@ -269,96 +278,58 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
     {
         if(pole1[i] != point1[i])
         {
-            scale = fabs((point1[i] - pole1[i]) / ((pole1[i] - pole1[i+3]) / m_rows));
-            if(scale > 127)
+            scale = fabs((point1[i] - pole1[i]) / ((pole1[i] - pole1[i+3]) / pole_rows));
+            if(scale >= 124)
             {
-                scale = 127;
+                scale = 124;
+            }
+            else if(scale <= 4)
+            {
+                scale = 4;
             }
             break;
         }
     }   //求解出基座位置
 
-    int alpha_scale = (alpha + 3.1416) / (6.2832 / m_cols);
+    if(scale < 4)
+    {
+        scale = 4;
+    }
 
-    // //求解出杆件2在杆件1坐标系yOz面上投影
-    // Vector project_pole2_x_pole1_y = vec_projection(pole2_x, pole1_y);
-    // Vector project_pole2_x_pole1_z = vec_projection(pole2_x, pole1_z);
-    // Vector project_pole2_x_pole1_yOz = operator+(project_pole2_x_pole1_y, project_pole2_x_pole1_z);
-    // //适用于大部分情况，但平行与空间异面需另外考虑
-    // //从杆件2在杆件1坐标系yOz面投影入手，分为在y轴上投影和z轴上投影
-    // if(project_pole2_x_pole1_yOz.X == 0 && 
-    //    project_pole2_x_pole1_yOz.Y == 0 && 
-    //    project_pole2_x_pole1_yOz.Z == 0)//yOz面上投影长度为0,两杆件平行
-    // {
-    //     project_pole2_x_pole1_yOz.X = point1[3] - point1[0];
-    //     project_pole2_x_pole1_yOz.Y = point1[4] - point1[1];
-    //     project_pole2_x_pole1_yOz.Z = point1[5] - point1[2];    //实际投影矢量不是这个，此处仅如此表示，方便计算
-    // }
+    int alpha_scale = (alpha + 3.1416) / (6.2832 / pole_cols);
+    if(alpha_scale > 127)
+    {
+        alpha_scale = 0;
+    }
 
-    // alpha = v_angle(project_pole2_x_pole1_yOz,pole1_z);    //求解出基座姿态，靠近杆件2方向,缺少方向，绕x轴，顺时针为正,pole1_z转向投影
-    // Vector tmp_pole1_z_project_pole2_x_pole1_yOz = operator&(pole1_z, project_pole2_x_pole1_yOz);
-    // tmp_pole1_z_project_pole2_x_pole1_yOz = Norm_Vec(tmp_pole1_z_project_pole2_x_pole1_yOz);
-    // if(tmp_pole1_z_project_pole2_x_pole1_yOz.X == pole1_x.X &&
-    //    tmp_pole1_z_project_pole2_x_pole1_yOz.Y == pole1_x.Y &&
-    //    tmp_pole1_z_project_pole2_x_pole1_yOz.Z == pole1_x.Z)
-    // {
-    //     alpha = alpha;
-    // }
-    // else
-    // {
-    //     alpha = -alpha;
-    // }
+
+    if(DOF_flag == 6)
+    {
+        first_grippoint = {scale, alpha_scale};
+    }
+    else if(DOF_flag == 5)
+    {
+        alpha_scale = base_point[1];
+        first_grippoint = {scale, alpha_scale};
+    }
+    else
+    {
+        std::cout << "DOF setting error!" << std::endl;
+    }
     
 
-    // //空间异面时需要判断方位
-    // Vector tmp_p1_p2 = {point1[0] - point1[3], point1[1] - point1[4], point1[2] - point1[5]};
-    // Vector project_tmp_p1_p2_pole1_z = vec_projection(tmp_p1_p2, pole1_z);
-    // project_tmp_p1_p2_pole1_z = Norm_Vec(project_tmp_p1_p2_pole1_z);
-    // Vector project_tmp_p1_p2_pole1_y = vec_projection(tmp_p1_p2, pole1_y);
-    // project_tmp_p1_p2_pole1_y = Norm_Vec(project_tmp_p1_p2_pole1_y);
-    // // if(project_tmp_p1_p2_pole1_z.X == pole1_z.X &&
-    // //    project_tmp_p1_p2_pole1_z.Y == pole1_z.Y &&
-    // //    project_tmp_p1_p2_pole1_z.Z == pole1_z.Z)
-    // // {
-    // //     alpha += 1.5708;
-    // // }
-    // // else
-    // // {
-    // //     alpha -= 1.5708;
-    // // }
-    
-    // for (int i = 0; i < 3; ++i)
+
+
+    // std::cout << "test   ";
+    // for (int i = 0; i < first_grippoint.size();++i)
     // {
-    //     if(pole1[i] != point1[i])
-    //     {
-    //         scale = fabs((point1[i] - pole1[i]) / ((pole1[i] - pole1[i+3]) / m_rows));
-    //         break;
-    //     }
-    // }   //求解出基座位置
+    //     std::cout << first_grippoint[i] << " ";
+    // }
+    // std::cout << std::endl;
 
-
-    // // cout << "tmp_pole1_z_project_pole2_x_pole1_yOz = " << tmp_pole1_z_project_pole2_x_pole1_yOz.X <<"  "<<tmp_pole1_z_project_pole2_x_pole1_yOz.Y<<"  "<<tmp_pole1_z_project_pole2_x_pole1_yOz.Z<< endl;
-    // cout << "project_tmp_p1_p2_pole1_z = " << project_tmp_p1_p2_pole1_z.X <<"  "<<project_tmp_p1_p2_pole1_z.Y<<"  "<<project_tmp_p1_p2_pole1_z.Z<< endl;
-    // cout << "project_tmp_p1_p2_pole1_y = " << project_tmp_p1_p2_pole1_y.X <<"  "<<project_tmp_p1_p2_pole1_y.Y<<"  "<<project_tmp_p1_p2_pole1_y.Z<< endl;
-    // // cout << "project_pole2_x_pole1_yOz = " << project_pole2_x_pole1_yOz.X <<" "<<project_pole2_x_pole1_yOz.Y<<" "<<project_pole2_x_pole1_yOz.Z<< endl;
-    // // cout << "project_pole2_x_pole1_z = " << project_pole2_x_pole1_z.X <<" "<<project_pole2_x_pole1_z.Y<<" "<<project_pole2_x_pole1_z.Z<< endl;
-    // // cout << "project_pole2_x_pole1_y = " << project_pole2_x_pole1_y.X <<" "<<project_pole2_x_pole1_y.Y<<" "<<project_pole2_x_pole1_y.Z<< endl;
-    // cout << "pole1_x = " << pole1_x.X <<" "<<pole1_x.Y<<" "<<pole1_x.Z<< endl;
-    // cout << "pole1_y = " << pole1_y.X <<" "<<pole1_y.Y<<" "<<pole1_y.Z<< endl;
-    // cout << "pole1_z = " << pole1_z.X <<" "<<pole1_z.Y<<" "<<pole1_z.Z<< endl;
-    // cout << "alpha = " << alpha << endl;
-    // cout << "alpha_scale = " << alpha_scale << endl;
-    // cout << "scale = " << scale << endl;  
-    // cout << "point1 = " << point1[0] <<" "<<point1[1]<<" "<<point1[2]<< endl;
-    // cout << "point1 = " << point1[3] <<" "<<point1[4]<<" "<<point1[5]<< endl;
-
-
-
-    first_grippoint = {scale, alpha_scale};
     auto tree_pole1 = new QTree;
-    // std::cout << scale << " " << alpha << std::endl;
-    tree_pole1->construct(pole1,pole2,scale,alpha_scale);
-    // std::cout << "treere" << tree_pole1->t_root->isLeaf << std::endl;
+    // std::cout <<"result = "<< scale << " " << alpha_scale << std::endl;
+    tree_pole1->construct(pole1,pole2,scale,alpha_scale,DOF_flag);
 
     tree_pole1->findTreeNode(tree_pole1->t_root,sec_grippoint);
 
@@ -369,31 +340,67 @@ int globalPathPlan::transMat(vector<double> &pole1,vector<double> &pole2,std::ve
     }
     else
     {
-        // std::cout << "false" << std::endl;
+        std::cout << "无解" << std::endl;
         return 0;
     }
-    
 
-    // if (min_distance(pole1, pole2, point1) < 1400) //1518
-    // {
-    //     return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
-    // }
     return 0;
 }
 
 //快速可过渡判断
-int globalPathPlan::fastTransMat(std::vector<double> &pole1, std::vector<double> &pole2)
+int globalPathPlan::fastTransMat(std::vector<double> &pole1, std::vector<double> &pole2,const int DOF_flag)
 {
     double point1[6];
-    if (minDistance(pole1, pole2, point1) < 1400) //1518
+
+    Vector pole1_v, pole2_v;
+    pole1_v.X = pole1[3] - pole1[0];
+    pole1_v.Y = pole1[4] - pole1[1];
+    pole1_v.Z = pole1[5] - pole1[2];
+    pole2_v.X = pole2[3] - pole2[0];
+    pole2_v.Y = pole2[4] - pole2[1];
+    pole2_v.Z = pole2[5] - pole2[2];
+
+
+    if(DOF_flag == 5)
     {
-        return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
+        if(pole1_v*pole2_v == 0)
+        {
+            if(minDistance(pole1, pole2, point1) < 840) //1267.8-204-136.7
+            {
+                return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
+            } 
+            else
+                return 0;
+        }
+        
+        if (minDistance(pole1, pole2, point1) < 1140) //1267.8 * 0.9
+        {
+            return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
+        }
+        return 0;
     }
-    return 0;
+    else if(DOF_flag == 6)
+    {
+        if(pole1_v*pole2_v == 0)
+        {
+            if(minDistance(pole1, pole2, point1) < 1057)  //(1611 - 269.3 - 167.2) * 0.9
+            {
+                return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
+            } 
+            else
+                return 0;
+        }
+        
+        if (minDistance(pole1, pole2, point1) < 1450) //1611 * 0.9(经验系数)
+        {
+            return 1; //两杆最短距离大于机器人连杆长度，直接判定不可过渡
+        }
+        return 0;
+    }
 }
 
 //空间直线最短距离求解
-double minDistance(vector<double> &pole1,vector<double> &pole2,double *point)
+double minDistance(std::vector<double> &pole1,std::vector<double> &pole2,double *point)
 {
     double min_dis;
     Vector p1, p2;
@@ -403,6 +410,8 @@ double minDistance(vector<double> &pole1,vector<double> &pole2,double *point)
     p2.X = pole2[0] - pole2[3];
     p2.Y = pole2[1] - pole2[4];
     p2.Z = pole2[2] - pole2[5]; //求出方向向量
+
+    
 
     point[0] = (pole1[0] + pole1[3]) / 2;
     point[1] = (pole1[1] + pole1[4]) / 2;

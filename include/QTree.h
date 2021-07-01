@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>   //shared_ptr
 #include <vector>
+#include <queue>
 #include "m_Matrix.h"
 #include "Coordinate.h"
 #include "pole.h"
@@ -146,8 +147,8 @@ class QTree
         QTree();
         ~QTree();
 
-        QTreeNode *split(int t_rows, int t_cols, int M, int N, int depth, Poles &temp_pole);           //树结点分裂
-        QTreeNode *construct(std::vector<double> &p0, std::vector<double> &p1, int length, int alpha); //构建树
+        QTreeNode *split(int t_rows, int t_cols, int M, int N, int depth, Poles &temp_pole,const int DOF_flag);           //树结点分裂
+        QTreeNode *construct(std::vector<double> &p0, std::vector<double> &p1, int length, int alpha,const int DOF_flag); //构建树
         QTreeNode *merge(QTreeNode *p_node);                                                           //树结点合并
         void PrintAllQTreeNode(QTreeNode *p_node);                                                     //输出叶子结点
         void PrintObsQTreeNode(QTreeNode *p_node);                                                     //输出不可过渡结点
@@ -155,8 +156,12 @@ class QTree
 
         QTreeNode *findNode(const Point& point);
 
+        void getNodeCount(QTreeNode *p_node);
+        int count = 0;
+
     protected:
         // std::shared_ptr<QTreeNode> t_root;  //四叉树根结点
+        
 };
 
 

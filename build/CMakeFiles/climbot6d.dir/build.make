@@ -249,9 +249,33 @@ CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o.provides: CMakeFiles/climbot6d.dir/s
 CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o
 
 
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.o: CMakeFiles/climbot6d.dir/flags.make
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.o: ../src/motionplan.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/climbot6d.dir/src/motionplan.cpp.o"
+	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/motionplan.cpp.o -c /home/wei/climbot6d/src/motionplan.cpp
+
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/climbot6d.dir/src/motionplan.cpp.i"
+	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wei/climbot6d/src/motionplan.cpp > CMakeFiles/climbot6d.dir/src/motionplan.cpp.i
+
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/climbot6d.dir/src/motionplan.cpp.s"
+	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wei/climbot6d/src/motionplan.cpp -o CMakeFiles/climbot6d.dir/src/motionplan.cpp.s
+
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.requires:
+
+.PHONY : CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.requires
+
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.provides: CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.requires
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.provides.build
+.PHONY : CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.provides
+
+CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/motionplan.cpp.o
+
+
 CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o: CMakeFiles/climbot6d.dir/flags.make
 CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o: ../src/pathallocate.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o"
 	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o -c /home/wei/climbot6d/src/pathallocate.cpp
 
 CMakeFiles/climbot6d.dir/src/pathallocate.cpp.i: cmake_force
@@ -271,30 +295,6 @@ CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o.provides: CMakeFiles/climbot6d.d
 .PHONY : CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o.provides
 
 CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o
-
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o: CMakeFiles/climbot6d.dir/flags.make
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o: ../src/cubicSpline.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o"
-	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o -c /home/wei/climbot6d/src/cubicSpline.cpp
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.i"
-	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wei/climbot6d/src/cubicSpline.cpp > CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.i
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.s"
-	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wei/climbot6d/src/cubicSpline.cpp -o CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.s
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.requires:
-
-.PHONY : CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.requires
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.provides: CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.requires
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.provides.build
-.PHONY : CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.provides
-
-CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o
 
 
 CMakeFiles/climbot6d.dir/src/globalpath.cpp.o: CMakeFiles/climbot6d.dir/flags.make
@@ -321,9 +321,33 @@ CMakeFiles/climbot6d.dir/src/globalpath.cpp.o.provides: CMakeFiles/climbot6d.dir
 CMakeFiles/climbot6d.dir/src/globalpath.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/globalpath.cpp.o
 
 
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o: CMakeFiles/climbot6d.dir/flags.make
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o: ../src/robotTorque.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o"
+	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o -c /home/wei/climbot6d/src/robotTorque.cpp
+
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/climbot6d.dir/src/robotTorque.cpp.i"
+	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/wei/climbot6d/src/robotTorque.cpp > CMakeFiles/climbot6d.dir/src/robotTorque.cpp.i
+
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/climbot6d.dir/src/robotTorque.cpp.s"
+	/usr/bin/g++-5  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/wei/climbot6d/src/robotTorque.cpp -o CMakeFiles/climbot6d.dir/src/robotTorque.cpp.s
+
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.requires:
+
+.PHONY : CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.requires
+
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.provides: CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.requires
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.provides.build
+.PHONY : CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.provides
+
+CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.provides.build: CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o
+
+
 CMakeFiles/climbot6d.dir/src/pole.cpp.o: CMakeFiles/climbot6d.dir/flags.make
 CMakeFiles/climbot6d.dir/src/pole.cpp.o: ../src/pole.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/climbot6d.dir/src/pole.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/climbot6d.dir/src/pole.cpp.o"
 	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/pole.cpp.o -c /home/wei/climbot6d/src/pole.cpp
 
 CMakeFiles/climbot6d.dir/src/pole.cpp.i: cmake_force
@@ -347,7 +371,7 @@ CMakeFiles/climbot6d.dir/src/pole.cpp.o.provides.build: CMakeFiles/climbot6d.dir
 
 CMakeFiles/climbot6d.dir/src/QTree.cpp.o: CMakeFiles/climbot6d.dir/flags.make
 CMakeFiles/climbot6d.dir/src/QTree.cpp.o: ../src/QTree.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/climbot6d.dir/src/QTree.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/climbot6d.dir/src/QTree.cpp.o"
 	/usr/bin/g++-5   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/climbot6d.dir/src/QTree.cpp.o -c /home/wei/climbot6d/src/QTree.cpp
 
 CMakeFiles/climbot6d.dir/src/QTree.cpp.i: cmake_force
@@ -379,9 +403,10 @@ climbot6d_OBJECTS = \
 "CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/Coordinate.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o" \
+"CMakeFiles/climbot6d.dir/src/motionplan.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o" \
-"CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/globalpath.cpp.o" \
+"CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/pole.cpp.o" \
 "CMakeFiles/climbot6d.dir/src/QTree.cpp.o"
 
@@ -396,15 +421,17 @@ climbot6d: CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/Coordinate.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o
+climbot6d: CMakeFiles/climbot6d.dir/src/motionplan.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o
-climbot6d: CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/globalpath.cpp.o
+climbot6d: CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/pole.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/src/QTree.cpp.o
 climbot6d: CMakeFiles/climbot6d.dir/build.make
 climbot6d: /usr/local/lib/libnlopt.so.0.11.0
+climbot6d: /opt/ros/kinetic/lib/x86_64-linux-gnu/libompl.so
 climbot6d: CMakeFiles/climbot6d.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable climbot6d"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/wei/climbot6d/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable climbot6d"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/climbot6d.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -420,9 +447,10 @@ CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/gpoptidata.cpp.o
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/generateSimData.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/Coordinate.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/m_Matrix.cpp.o.requires
+CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/motionplan.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/pathallocate.cpp.o.requires
-CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/globalpath.cpp.o.requires
+CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/pole.cpp.o.requires
 CMakeFiles/climbot6d.dir/requires: CMakeFiles/climbot6d.dir/src/QTree.cpp.o.requires
 

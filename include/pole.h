@@ -7,8 +7,8 @@
 #include "Coordinate.h"
 #include "Kine.h"
 
-#define m_rows 128
-#define m_cols 128
+#define pole_rows 128
+#define pole_cols 128
 
 struct Poles
 {   
@@ -27,7 +27,7 @@ class Discretepole
         Discretepole();
         ~Discretepole();
     private:
-        
+        int DOF_flag;
 
     public:
         Poles *cur_pole = new Poles; //当前杆件
@@ -61,7 +61,8 @@ class Discretepole
         void poleTransition(std::vector<double> &p0,
                             std::vector<double> &p1,
                             int length,int alpha,
-                            const int GripId);      
+                            const int GripId,
+                            const int DOFflag);      
         
         //可过渡性判断
         void transitionalTest(Poles *cur_pole, Poles *target_pole,const int GripId);
@@ -83,8 +84,9 @@ MtxKine getCurBaseMtx(int angle);
 
 MtxKine getCurMtx(std::vector<double> &cur_truss,int length,int angle);
 
-void transPointToWorld(float* in_point,std::vector<double> &cur_truss,int length,int angle,float* out_point);
+MtxKine getCurMtxfromJointAngle(double *joint_angle, const int Grip_ID);
 
+void transPointToWorld(float* in_point,std::vector<double> &cur_truss,int length,int angle,float* out_point,const int Grip_ID);
 
 
 #endif  //pole.h

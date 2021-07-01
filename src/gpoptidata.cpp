@@ -1,7 +1,7 @@
 #include "../include/gpoptidata.h"
 
 
-globalPathPlan globaltmp;
+static globalPathPlan globaltmp;
 
 /*
  * 功能：给定起点终点.输出全局规划路径
@@ -15,22 +15,23 @@ globalPathPlan globaltmp;
 int globalPathPlanStart(std::vector<int>& start_point,
                                     std::vector<int>& end_point,
                                     int start_pole,int end_pole,
-                                    std::vector<std::vector<int>> &res)
+                                    std::vector<std::vector<int>> &res,
+                                    const int DOF_flag)
 {
     std::vector<double> grippoint;
     // globalPathPlan globaltest1;
-    res = globaltmp.adjMat(truss);
+    res = globaltmp.adjMat(truss,DOF_flag);
     std::vector<std::vector<int>> path = globaltmp.findAllPath(res,start_pole,end_pole);
-    // globaltmp.outPut(path);
-    // std::cout << "邻接矩阵：" << std::endl;
-    // for (int i = 0; i < res.size(); ++i)
-    // {
-    //     for (int j = 0; j < res[0].size();++j)
-    //     {
-    //         cout << res[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+    globaltmp.outPut(path);
+    std::cout << "邻接矩阵：" << std::endl;
+    for (int i = 0; i < res.size(); ++i)
+    {
+        for (int j = 0; j < res[0].size();++j)
+        {
+            cout << res[i][j] << ",";
+        }
+        cout << endl;
+    }
     return 0;
 }
 
@@ -149,7 +150,11 @@ int findminiball(const vector<double> &p1,const vector<double> &p2,
  * 输出:全局路径序列 truss_list
  *     夹持点信息 grippoint_list
 */
-void getTransTrussList(std::vector<int> start_point,std::vector<int> end_point,std::vector<int> &truss_list, std::vector<std::vector<int>> &grippoint_list)
+void getTransTrussList(std::vector<int> start_point,
+                        std::vector<int> end_point,
+                        std::vector<int> &truss_list, 
+                        std::vector<std::vector<int>> &grippoint_list,
+                        const int DOF_flag)
 {
     if(truss_list.size() == 0 || truss_list.size() == 1)
     {
@@ -161,15 +166,20 @@ void getTransTrussList(std::vector<int> start_point,std::vector<int> end_point,s
     grippoint_list.push_back(start_point);  //起点压入夹持点列表
     grippoint_list.resize(2 * truss_num-1,{0,0});
 
-    std::vector<int> grippoint,sec_grippoint;
-    int tmp = 1;    //临时参数，用于标志grippoint_list
+    std::vector<int> grippoint,sec_grippoint,base_point;
+    base_point.push_back(grippoint_list[0][0]);
+    base_point.push_back(grippoint_list[0][1]);
+    int tmp = 1; //临时参数，用于标志grippoint_list
     for (int i = 0; i < truss_list.size()-1;++i)
     {
-        globaltmp.transMat(truss[truss_list[i]-1], truss[truss_list[i + 1]-1], grippoint,sec_grippoint);
+        std::cout << "base point " << base_point[0] << " " << base_point[1] << std::endl;
+        globaltmp.transMat(truss[truss_list[i] - 1], truss[truss_list[i + 1] - 1], grippoint, sec_grippoint,base_point, DOF_flag);
         grippoint_list[tmp][0] = grippoint[0];
         grippoint_list[tmp][1] = grippoint[1];
         grippoint_list[tmp + 1][0] = sec_grippoint[0];
         grippoint_list[tmp + 1][1] = sec_grippoint[1];
+        base_point[0] = sec_grippoint[0];
+        base_point[1] = sec_grippoint[1];
         grippoint.pop_back();
         sec_grippoint.pop_back();
         sec_grippoint.pop_back();
@@ -238,7 +248,10 @@ int getPontentialObstacle(std::vector<std::vector<double>> &link,
         }
     }
 
-    if(pontential_truss.size() != 0)
+    pontential_truss.push_back(cur_truss);
+    pontential_truss.push_back(tar_truss);
+
+    if(pontential_truss.size() != 2)
     {
         return 0;
     }
@@ -255,17 +268,17 @@ int getPontentialObstacle(std::vector<std::vector<double>> &link,
  * - length2\angle2：机器人目标夹持点的离散地图位置
  * 返回值：连杆坐标数组
  */
-std::vector<std::vector<double>> getCurJointPoint(std::vector<double> &cur_truss, std::vector<double> &tar_truss,
+void getCurJointPoint(std::vector<double> &cur_truss, std::vector<double> &tar_truss,
                     const int length1, const int angle1,
-                    const int length2, const int angle2)
+                    const int length2, const int angle2,
+                    std::vector<std::vector<double>> &link)
 {
     double joint_val[6];
     transwithIK(cur_truss, tar_truss, length1, angle1, length2, angle2,0,joint_val);
 
-    std::vector<std::vector<double>> link;
     double len[7] = {269.3, 167.2, 369, 167.2, 201.8, 167.2, 269.3};
-    link = Linkage6D(len, joint_val, cur_truss, length1, angle1);
-    return link;
+    Linkage6D(len, joint_val, cur_truss, length1, angle1,0,link);
+    return;
 }
 
 /*
@@ -278,19 +291,35 @@ std::vector<std::vector<double>> getCurJointPoint(std::vector<double> &cur_truss
 int potentialObsTest(std::vector<std::vector<double>> &link,
                     std::vector<int> &pontential_truss) //注意:此处为杆件编码减1
 {
-    std::vector<double> tmp_link(6,0);
+    double threshold = 90;
+    std::vector<double> tmp_link(6, 0);
     double point[6];    //函数参数,此处无用
-    for (int i = 0; i < pontential_truss.size(); ++i)
+    for (int i = 0; i < pontential_truss.size()-2; ++i)
     {
         for (int j = 0; j < 4;++j)
         {
             tmp_link = link[j];
             double distance = minDistance(tmp_link, truss[pontential_truss[i]], point);
             // std::cout << distance << " ";
-            if (distance < 85)  //碰撞检测阈值设置  //85
+            if (distance < threshold)  //碰撞检测阈值设置  //85
             {
+                // std::cout << "err01 " << distance <<std::endl;
                 return 0;
             }
+        }
+    }
+
+    for (int i = pontential_truss.size()-2; i < pontential_truss.size(); ++i)
+    {
+        //机器人与夹持杆件不发生碰撞
+        if(minDistance(link[1],truss[pontential_truss[i]],point) < threshold+40 || 
+        minDistance(link[2],truss[pontential_truss[i]],point) < threshold+40 || 
+        minDistance(link[3],truss[pontential_truss[i]],point) < threshold+40 )
+        {
+            // std::cout << "err02 " <<minDistance(link[1],truss[pontential_truss[i]],point)<<" "<<
+            // minDistance(link[2],truss[pontential_truss[i]],point)<<" "<<
+            // minDistance(link[3],truss[pontential_truss[i]],point) <<std::endl;
+            return 0;
         }
     }
 

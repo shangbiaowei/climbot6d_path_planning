@@ -1,0 +1,3 @@
+/home/wei/climbot6d/CMakeFiles/rebuild_cache.dir
+/home/wei/climbot6d/CMakeFiles/edit_cache.dir
+/home/wei/climbot6d/CMakeFiles/climbot6d.dir

@@ -11,6 +11,7 @@
 #include <iostream>
 #include "QTree.h"
 #include "gpoptidata.h"
+#include "environment.h"
 #include <nlopt.hpp>
 
 using namespace std;
@@ -50,9 +51,6 @@ int getGripNumber(double dist,int length_start,int angle_start,int length_end,in
     else if(dist > 110 && dist <= 758.4)
     {
         double out_joint[6];
-        // auto testtree = new QTree;
-        // testtree->construct(cur_truss, cur_truss, length_start, angle_start);
-        // Point point(length_end, angle_end);
         if (transwithIK(cur_truss, cur_truss,length_start,angle_start,length_end,angle_end,0,out_joint) == 1)
         {
             gripnum = 1;
@@ -91,7 +89,7 @@ double objective_fun(const std::vector<double> &init_data,
         len_scale[i] = (sqrt((truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) * (truss[truss_list[i] - 1][0] - truss[truss_list[i] - 1][3]) +
                         (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) * (truss[truss_list[i] - 1][1] - truss[truss_list[i] - 1][4]) +
                         (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]) * (truss[truss_list[i] - 1][2] - truss[truss_list[i] - 1][5]))) /
-                        m_rows;
+                        pole_rows;
     }
 
     //第一根杆件
@@ -172,6 +170,7 @@ double collisioncon(const std::vector<double> &init_data,
     std::vector<double> tmp_truss1, tmp_truss2; //用于表示过渡时两杆件
     int truss_num = truss_list.size();
     int countnum = 0;
+    double point[6];    //临时参数，用于minDistance，无用
 
     std::vector<int> poten_truss;   //潜在的碰撞杆件
 
@@ -184,7 +183,17 @@ double collisioncon(const std::vector<double> &init_data,
 
         if(countnum % 2 == 0)
         {
-            robot_link = getCurJointPoint(tmp_truss1, tmp_truss2,init_data[4 * i], init_data[4 * i + 1], init_data[4 * i + 2], init_data[4 * i + 3]);
+            getCurJointPoint(tmp_truss1, tmp_truss2,init_data[4 * i], init_data[4 * i + 1], init_data[4 * i + 2], init_data[4 * i + 3],robot_link);
+            // // 机器人与夹持杆件不发生碰撞
+            // if(minDistance(robot_link[2],tmp_truss1,point) < 90 || minDistance(robot_link[3],tmp_truss1,point) < 90 )
+            // {
+            //     flag--;
+            // }
+            // if(minDistance(robot_link[2],tmp_truss2,point) < 90 || minDistance(robot_link[3],tmp_truss2,point) < 90)
+            // {
+            //     flag--;
+            // }
+
             int tmp_flag = getPontentialObstacle(robot_link, adj_mat, truss_list[i], truss_list[i + 1], poten_truss);
             if(tmp_flag == 1)
             {
@@ -201,8 +210,19 @@ double collisioncon(const std::vector<double> &init_data,
         }
         else if(countnum % 2 == 1)
         {
-            robot_link = getCurJointPoint(tmp_truss2, tmp_truss1,init_data[4 * i + 2], init_data[4 * i + 3], init_data[4 * i], init_data[4 * i + 1]);
+            getCurJointPoint(tmp_truss2, tmp_truss1,init_data[4 * i + 2], init_data[4 * i + 3], init_data[4 * i], init_data[4 * i + 1],robot_link);
             int tmp_flag = getPontentialObstacle(robot_link, adj_mat, truss_list[i + 1], truss_list[i], poten_truss);
+
+            // // 机器人与夹持杆件不发生碰撞
+            // if(minDistance(robot_link[2],tmp_truss1,point) < 90 || minDistance(robot_link[3],tmp_truss1,point) < 90 )
+            // {
+            //     flag--;
+            // }
+            // if(minDistance(robot_link[2],tmp_truss2,point) < 90 || minDistance(robot_link[3],tmp_truss2,point) < 90)
+            // {
+            //     flag--;
+            // }
+
             if(tmp_flag == 1)
             {
                 flag++;
@@ -255,7 +275,7 @@ double singleCollision(const std::vector<double> &init_data,
         if(single_grip_num[0] == 1) //起始杆件
         {
             tmp_truss1 = truss[truss_list[0] - 1];
-            robot_link = getCurJointPoint(tmp_truss1, tmp_truss1,grippoint_list[0][0], grippoint_list[0][1], init_data[0], init_data[1]);
+            getCurJointPoint(tmp_truss1, tmp_truss1,grippoint_list[0][0], grippoint_list[0][1], init_data[0], init_data[1],robot_link);
             int tmp_flag = getPontentialObstacle(robot_link, adj_mat, truss_list[0], truss_list[0], poten_truss);
             if(tmp_flag == 1)
             {
@@ -274,7 +294,7 @@ double singleCollision(const std::vector<double> &init_data,
             if(single_grip_num[i] == 1)
             {
                 tmp_truss1 = truss[truss_list[i] - 1];
-                robot_link = getCurJointPoint(tmp_truss1, tmp_truss1,init_data[2 * i], init_data[2 * i + 1], init_data[2 * i + 2], init_data[2 * i + 3]);
+                getCurJointPoint(tmp_truss1, tmp_truss1,init_data[2 * i], init_data[2 * i + 1], init_data[2 * i + 2], init_data[2 * i + 3],robot_link);
                 int tmp_flag = getPontentialObstacle(robot_link, adj_mat, truss_list[i], truss_list[i], poten_truss);
                 if(tmp_flag == 1)
                 {
@@ -292,7 +312,7 @@ double singleCollision(const std::vector<double> &init_data,
         if(single_grip_num[truss_num - 1] == 1) //最后一根杆件
         {
             tmp_truss1 = truss[truss_list[truss_num - 1] - 1];
-            robot_link = getCurJointPoint(tmp_truss1, tmp_truss1,grippoint_list[grippoint_list.size() - 1][0], grippoint_list[grippoint_list.size() - 1][1], init_data[0], init_data[1]);
+            getCurJointPoint(tmp_truss1, tmp_truss1,grippoint_list[grippoint_list.size() - 1][0], grippoint_list[grippoint_list.size() - 1][1], init_data[0], init_data[1],robot_link);
             int tmp_flag = getPontentialObstacle(robot_link, adj_mat, truss_list[truss_num - 1], truss_list[truss_num - 1], poten_truss);
             if(tmp_flag == 1)
             {
@@ -337,7 +357,8 @@ int GripOpti(std::vector<int> &truss_list,
             std::vector<std::vector<int>> &grippoint_list,
             std::vector<std::vector<int>> &adj_mat,
             std::vector<int> &single_num,
-            std::vector<std::vector<int> > &opti_result)
+            std::vector<std::vector<int> > &opti_result,
+            const int DOF_flag)
 {
     double fmin = 0;
     double tol = 1e-1;
@@ -348,43 +369,9 @@ int GripOpti(std::vector<int> &truss_list,
     std::vector<double> lower(4 * truss_num - 4,0);   //变量上下边界
     for (size_t i = 0;i< 4 * truss_num - 4;++i)
     {
-        upper[i] = m_rows - 1;
+        upper[i] = pole_rows - 1;
         lower[i] = 0;
     }
-    // for (int i = 0;i <  4 * truss_num - 4;++i)
-    // {
-    //     if(i == 0)
-    //     {
-    //         lower[0] = grippoint_list[1][0] - 30;
-    //         upper[0] = grippoint_list[1][0] + 30;
-    //     }
-    //     else if(i == 1)
-    //     {
-    //         lower[i] = grippoint_list[1][1] - 30;
-    //         upper[i] = grippoint_list[1][1] + 30;   //限制过渡时转角基座范围
-    //     }
-    //     else if((i+2) % 2 == 0)
-    //     {
-    //         lower[i] = grippoint_list[i/2 + 1][0] - 30;
-    //         upper[i] = grippoint_list[i/2 + 1][0] + 30;     //过渡时目标杆件距离范围
-    //     }
-    //     else if(i>1 &&  i % 2 == 1)
-    //     {
-    //         lower[i] = grippoint_list[(i + 1) / 2][1] - 30;
-    //         upper[i] = grippoint_list[(i + 1) / 2][1] + 30; //限制转角范围
-    //     }
-    // }
-    // for (int i = 0;i <  4 * truss_num - 4;++i)
-    // {
-    //     if(lower[i] < 0)
-    //     {
-    //         lower[i] = 0;
-    //     }
-    //     if(upper[i] > 127)
-    //     {
-    //         upper[i] = 127;
-    //     }
-    // }
 
     //设置变量初始值
     std::vector<double> init_data(4 * truss_num - 4,0); 
@@ -414,7 +401,7 @@ int GripOpti(std::vector<int> &truss_list,
     local_opter.set_min_objective(objective_fun, consdata_list_ptr);
 
     // // // 不等式约束
-    // local_opter.add_inequality_constraint(constraint, truss_grippoint_list_ptr, 0);
+    //local_opter.add_inequality_constraint(constraint, truss_grippoint_list_ptr, 0);
 
     // 等式约束
     local_opter.add_equality_constraint(constraint, consdata_list_ptr, 0);
@@ -428,7 +415,7 @@ int GripOpti(std::vector<int> &truss_list,
     {
         if(i%2 == 0)
         {
-            int_step[i] = 20;
+            int_step[i] = 10;
         }
         else{
             int_step[i] = 5;
@@ -504,7 +491,7 @@ int GripOpti(std::vector<int> &truss_list,
 //     std::vector<double> lower(4 * truss_num - 4,0);   //变量上下边界
 //     for (size_t i = 0;i< 4 * truss_num - 4;++i)
 //     {
-//         upper[i] = m_rows - 1;
+//         upper[i] = pole_rows - 1;
 //         lower[i] = 0;
 //     }
 //     for (int i = 0;i <  4 * truss_num - 4;++i)
@@ -608,7 +595,7 @@ int GripOpti(std::vector<int> &truss_list,
 //     std::vector<double> local_lower(4 * truss_num - 4,0);   //变量上下边界
 //     for (size_t i = 0;i< 4 * truss_num - 4;++i)
 //     {
-//         local_upper[i] = m_rows - 1;
+//         local_upper[i] = pole_rows - 1;
 //         local_lower[i] = 0;
 //     }
 //     //设置自变量下限

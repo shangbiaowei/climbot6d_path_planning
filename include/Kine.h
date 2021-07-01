@@ -9,6 +9,8 @@
 ***********************************************************/
 #include <vector>
 #include "pole.h"
+#include<eigen3/Eigen/Core>
+#include<eigen3/Eigen/Geometry>
 
 
 class Kine
@@ -80,6 +82,51 @@ class Kine_CR_SixDoF_G2: public Kine
 		double L_G2[4];
 };
 
+
+/*****************************************************************************
+ *  五关节攀爬机器人运动学 - G1
+ *****************************************************************************/
+class Kine_CR_FiveDoF_G1: public Kine
+{
+public:
+	// 初始化杆长 
+	void Set_Length(IN double gdLen[5]);
+	// 正解
+	int FKine(IN double gdJPos[5], OUT double gdCPos[6]);
+	// 逆解
+	int IKine(IN double gdCPos[6], IN double gdJCurr[5], OUT double gdJPos[5]);
+
+	int FKine_Inc(IN double gdJPos[5], IN double inc[3], OUT double gdCPos[3]);
+
+private:
+	double m_dL1;
+	double m_dL2;
+	double m_dL3;
+	double m_dL4;
+	double m_dL5;
+
+};
+
+/*****************************************************************************
+ *  五关节攀爬机器人运动学-G2
+ *****************************************************************************/
+class Kine_CR_FiveDoF_G2: public Kine
+{
+public:
+	// 初始化杆长 
+	void Set_Length(IN double gdLen[5]);
+	// 正解
+	int FKine(IN double gdJPos[5], OUT double gdCPos[6]);
+	// 逆解
+	int IKine(IN double gdCPos[6], IN double gdJCurr[5], OUT double gdJPos[5]);
+
+	int FKine_Inc(IN double gdJPos[5], IN double inc[3], OUT double gdCPos[3]);
+	
+private:
+	Kine_CR_FiveDoF_G1 kine;
+};
+
+
 void Trans_PosToMtx(double* pos, MtxKine* output, int inv);  //实现物体坐标系在夹持器坐标系下的矩阵表示
 void Trans_MtxToPos(MtxKine* input, double* outpos);
 
@@ -88,7 +135,8 @@ void Trans_MtxToPos(MtxKine* input, double* outpos);
 * 输入：机器人杆长：gdLen(7),当前关节角：gdJPos(6)
 * 输出：机器人四根连杆的端点:Linkage6D
 ***********************************************************/
-std::vector<std::vector<double>> Linkage6D(IN double gdLen[7],IN double* gdJPos,std::vector<double> &cur_truss,int length,int angle);
+void Linkage6D(IN double gdLen[7],IN double* gdJPos,std::vector<double> &cur_truss,int length,int angle,const int Grip_Id,
+				std::vector<std::vector<double>> &Linkage);
 
 
 #endif

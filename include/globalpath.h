@@ -34,7 +34,7 @@ class globalPathPlan
      *        输入:杆件信息 pole_mat
      *        输出:邻接矩阵 adj_mat
      *****************************************************************************/
-        std::vector<std::vector<int> > adjMat(std::vector<std::vector<double> > &pole_mat);
+        std::vector<std::vector<int> > adjMat(std::vector<std::vector<double> > &pole_mat,const int DOF_flag);
 
     /*****************************************************************************
      *        可过渡性判断
@@ -44,8 +44,14 @@ class globalPathPlan
      *            夹持点：first_grippoint:同一杆件上第一个夹持点
      *                   sec_grippoint:同一杆件上最后一个夹持点（如果存在）
      *****************************************************************************/
-        int transMat(std::vector<double> &pole1, std::vector<double> &pole2,std::vector<int> &first_grippoint,std::vector<int> &sec_grippoint);
-        int fastTransMat(std::vector<double> &pole1, std::vector<double> &pole2);
+        int transMat(std::vector<double> &pole1, 
+                    std::vector<double> &pole2,
+                    std::vector<int> &first_grippoint,
+                    std::vector<int> &sec_grippoint,
+                    std::vector<int> &base_point,
+                    const int DOF_flag);
+                    
+        int fastTransMat(std::vector<double> &pole1, std::vector<double> &pole2,const int DOF_flag);
 };
 
 

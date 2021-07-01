@@ -231,33 +231,6 @@ src/QuadTree.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/QuadTree.cpp.s
 .PHONY : src/QuadTree.cpp.s
 
-src/cubicSpline.o: src/cubicSpline.cpp.o
-
-.PHONY : src/cubicSpline.o
-
-# target to build an object file
-src/cubicSpline.cpp.o:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.o
-.PHONY : src/cubicSpline.cpp.o
-
-src/cubicSpline.i: src/cubicSpline.cpp.i
-
-.PHONY : src/cubicSpline.i
-
-# target to preprocess a source file
-src/cubicSpline.cpp.i:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.i
-.PHONY : src/cubicSpline.cpp.i
-
-src/cubicSpline.s: src/cubicSpline.cpp.s
-
-.PHONY : src/cubicSpline.s
-
-# target to generate assembly for a file
-src/cubicSpline.cpp.s:
-	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/cubicSpline.cpp.s
-.PHONY : src/cubicSpline.cpp.s
-
 src/gaitplan.o: src/gaitplan.cpp.o
 
 .PHONY : src/gaitplan.o
@@ -420,6 +393,33 @@ src/main.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/motionplan.o: src/motionplan.cpp.o
+
+.PHONY : src/motionplan.o
+
+# target to build an object file
+src/motionplan.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.o
+.PHONY : src/motionplan.cpp.o
+
+src/motionplan.i: src/motionplan.cpp.i
+
+.PHONY : src/motionplan.i
+
+# target to preprocess a source file
+src/motionplan.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.i
+.PHONY : src/motionplan.cpp.i
+
+src/motionplan.s: src/motionplan.cpp.s
+
+.PHONY : src/motionplan.s
+
+# target to generate assembly for a file
+src/motionplan.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/motionplan.cpp.s
+.PHONY : src/motionplan.cpp.s
+
 src/pathallocate.o: src/pathallocate.cpp.o
 
 .PHONY : src/pathallocate.o
@@ -474,6 +474,33 @@ src/pole.cpp.s:
 	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/pole.cpp.s
 .PHONY : src/pole.cpp.s
 
+src/robotTorque.o: src/robotTorque.cpp.o
+
+.PHONY : src/robotTorque.o
+
+# target to build an object file
+src/robotTorque.cpp.o:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.o
+.PHONY : src/robotTorque.cpp.o
+
+src/robotTorque.i: src/robotTorque.cpp.i
+
+.PHONY : src/robotTorque.i
+
+# target to preprocess a source file
+src/robotTorque.cpp.i:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.i
+.PHONY : src/robotTorque.cpp.i
+
+src/robotTorque.s: src/robotTorque.cpp.s
+
+.PHONY : src/robotTorque.s
+
+# target to generate assembly for a file
+src/robotTorque.cpp.s:
+	$(MAKE) -f CMakeFiles/climbot6d.dir/build.make CMakeFiles/climbot6d.dir/src/robotTorque.cpp.s
+.PHONY : src/robotTorque.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -495,9 +522,6 @@ help:
 	@echo "... src/QuadTree.o"
 	@echo "... src/QuadTree.i"
 	@echo "... src/QuadTree.s"
-	@echo "... src/cubicSpline.o"
-	@echo "... src/cubicSpline.i"
-	@echo "... src/cubicSpline.s"
 	@echo "... src/gaitplan.o"
 	@echo "... src/gaitplan.i"
 	@echo "... src/gaitplan.s"
@@ -516,12 +540,18 @@ help:
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
+	@echo "... src/motionplan.o"
+	@echo "... src/motionplan.i"
+	@echo "... src/motionplan.s"
 	@echo "... src/pathallocate.o"
 	@echo "... src/pathallocate.i"
 	@echo "... src/pathallocate.s"
 	@echo "... src/pole.o"
 	@echo "... src/pole.i"
 	@echo "... src/pole.s"
+	@echo "... src/robotTorque.o"
+	@echo "... src/robotTorque.i"
+	@echo "... src/robotTorque.s"
 .PHONY : help
 
 
